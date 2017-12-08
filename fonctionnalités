@@ -1,0 +1,47 @@
+============LES ENTITES====================
+Un trajet est défini par :
+ - Un conducteur (proposant le trajet)
+ - Un type de véhicule (parmi une liste)
+ - Un intitulé de véhicule (chaine de caractère)
+ - Une date/heure/lieu de départ
+ - un lieu d'arrivé
+ - 0..n étapes (ou 1..n+1 si on considère l'arrivé comme une étape)
+ - 1..n+1 tarifs (1 pour chaque étape + arrivé)
+ - un nombre de places
+
+Une réservation est définie par :
+ - un utilisateur réservant
+ - un trajet réservé
+ - un nombre de places réservées
+ - une fin de trajet
+ - un statut (approuvé, non approuvé, en attente)
+
+Un utilisateur authentifié est défini par :
+ - Des informations personnelles :
+   - Un nom/prénom
+   - âge
+   - sexe
+   - tel
+   - mail
+   - ...
+ - Un login
+ - Un mot de passe (haché)
+ - une liste de trajets proposés (il en est le conducteur)
+ - une liste de réservation d'autres trajets
+
+Les types de véhicules sont une liste extraite de la base de données
+Les villes sont une liste extraite de la base de données
+
+Un administrateur est défini par :
+ - Un login
+ - Un mot de passe
+
+
+================LES PAGES==================
+Page d'accueil : propose une recherche simple + authentification
+Page d'authentifiaction (réservé anonyme)
+Page personnelle (réservé utilisateur authentifié) : liste des trajets proposés et des réservations
+Page de recherche avancée
+Page de résultats de recherche
+Page de détails du trajet (avec + ou - d'options selon le rôle de l'utilisateur)
+Page d'édition des villes et des types de véhicules (admin seulement)
