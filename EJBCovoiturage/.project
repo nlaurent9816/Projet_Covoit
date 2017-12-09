@@ -27,11 +27,4 @@
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>ejbModule/META-INF/persistence.xml</name>
-			<type>1</type>
-			<location>C:/Users/Manuel/eclipse-workspace/FirstEJB.zip_expanded/FirstEJB/ejbModule/META-INF/persistence.xml</location>
-		</link>
-	</linkedResources>
 </projectDescription>
