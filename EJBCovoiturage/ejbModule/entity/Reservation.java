@@ -3,6 +3,7 @@ package entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Reservation {
@@ -10,13 +11,16 @@ public class Reservation {
 	@Id @GeneratedValue
 	private int idReservation;
 	
-	//private InfoUtilisateur passager;
+	@ManyToOne
+	private InfoUtilisateur passager;//Un utilisateur peut avoir plusieurs réservations BD
 	
-	//private Trajet leTrajet;
+	@ManyToOne
+	private Trajet leTrajet; //Il peut y avoir plusieurs réservations pour le même trajet (BD)
 	
 	private int nombrePlace;
 	
-	//private Ville arrivee;
+	@ManyToOne 
+	private Ville arrivee; //une ville d'arrivée peut être dans plusieurs réservations (MD)
 	
 	private String statut; //approuvé, non approuvé, en attente
 
@@ -28,7 +32,7 @@ public class Reservation {
 		this.idReservation = idReservation;
 	}
 
-	/*public InfoUtilisateur getPassager() {
+	public InfoUtilisateur getPassager() {
 		return passager;
 	}
 
@@ -42,7 +46,7 @@ public class Reservation {
 
 	public void setLeTrajet(Trajet leTrajet) {
 		this.leTrajet = leTrajet;
-	}*/
+	}
 
 	public int getNombrePlace() {
 		return nombrePlace;
@@ -52,13 +56,13 @@ public class Reservation {
 		this.nombrePlace = nombrePlace;
 	}
 
-	/*public Ville getArrivee() {
+	public Ville getArrivee() {
 		return arrivee;
 	}
 
 	public void setArrivee(Ville arrivee) {
 		this.arrivee = arrivee;
-	}*/
+	}
 
 	public String getStatut() {
 		return statut;

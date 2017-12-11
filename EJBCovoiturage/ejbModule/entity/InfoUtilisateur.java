@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 public class InfoUtilisateur {
@@ -29,12 +30,11 @@ public class InfoUtilisateur {
 	
 	//plus d'autres infos si besoin
 	
-
-	//private List<Trajet> mesTrajetsProposés;
+	@OneToMany(mappedBy="conducteur")
+	private List<Trajet> mesTrajetsProposés;//Un utilisateur peut avoir plusieurs trajets proposés (BD)
 	
-	@ManyToMany(mappedBy="passager")
-	@JoinColumn(name="id_utilisateur")
-	private List<Trajet> mesTrajetsRéservés;
+	@OneToMany(mappedBy="passager")
+	private List<Reservation> mesTrajetsRéservés;//un utilisateur peut avoir plusieurs réservations (BD)
 	
 	public int getIdInfo() {
 		return idInfo;
@@ -86,7 +86,23 @@ public class InfoUtilisateur {
 	}
 
 	
-	
+
+	public List<Trajet> getMesTrajetsProposés() {
+		return mesTrajetsProposés;
+	}
+
+	public void setMesTrajetsProposés(List<Trajet> mesTrajetsProposés) {
+		this.mesTrajetsProposés = mesTrajetsProposés;
+	}
+
+	public List<Reservation> getMesTrajetsRéservés() {
+		return mesTrajetsRéservés;
+	}
+
+	public void setMesTrajetsRéservés(List<Reservation> mesTrajetsRéservés) {
+		this.mesTrajetsRéservés = mesTrajetsRéservés;
+	}
+
 	
 
 		 

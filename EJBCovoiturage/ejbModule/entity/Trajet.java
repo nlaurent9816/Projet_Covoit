@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Trajet {
@@ -15,26 +17,35 @@ public class Trajet {
 	@Id @GeneratedValue
 	private int idTrajet;
 	
-	//private InfoUtilisateur conducteur;
+	@ManyToOne
+	private InfoUtilisateur conducteur;//Un utilisateur peut avoir plusieurs trajets prpoposés
 	
-	@ManyToMany
-	@JoinTable(name="Passagers")
-	@JoinColumn(name="id_trajet")
-	private List<InfoUtilisateur> passager;
+	@OneToMany(mappedBy="leTrajet")//Il peut y avoir plusieurs réservations pour le même trajet (BD) 
+	private List<Reservation> passagers;
 	
-	//private Vehicule typeVehicule;
+	@ManyToOne
+	private Vehicule typeVehicule;
 	
 	private String monVehicule;
 	
 	private String dateDepart; //garder ce type et faire une méthode pour parser chaine ou autre type plus convenable ?
 	
 	private String heureDepart;//idem que date
+
+	@ManyToOne
+	private Ville villeDepart;
 	
-	//private Ville villeDepart;
+	@ManyToOne
+	private Ville villeArrivee;
 	
-	//private Ville villeArrivee;
-	
-	//private List<Ville> lesEtapes;  // n étapes
+	@ManyToMany
+	@JoinTable(
+			name="EtapesTrajet", 
+			joinColumns=
+				@JoinColumn(name="id_trajet"),
+			inverseJoinColumns=
+				@JoinColumn(name="id_etape"))
+	private List<Ville> lesEtapes;  // n étapes 
 	
 	//private List<Float> lesTarifs; // n+1 tarifs le premier étant le tarif depuis la ville de départ
 	
@@ -48,7 +59,7 @@ public class Trajet {
 		this.idTrajet = id;
 	}
 
-	/*public InfoUtilisateur getConducteur() {
+	public InfoUtilisateur getConducteur() {
 		return conducteur;
 	}
 
@@ -62,7 +73,7 @@ public class Trajet {
 
 	public void setTypeVehicule(Vehicule typeVehicule) {
 		this.typeVehicule = typeVehicule;
-	}*/
+	}
 
 	public String getMonVehicule() {
 		return monVehicule;
@@ -88,7 +99,7 @@ public class Trajet {
 		this.heureDepart = heureDepart;
 	}
 
-	/*public Ville getVilleDepart() {
+	public Ville getVilleDepart() {
 		return villeDepart;
 	}
 
@@ -102,15 +113,15 @@ public class Trajet {
 
 	public void setVilleArrivee(Ville villeArrivee) {
 		this.villeArrivee = villeArrivee;
-	}*/
+	}
 
-	/*public List<Ville> getLesEtapes() {
+	public List<Ville> getLesEtapes() {
 		return lesEtapes;
 	}
 
 	public void setLesEtapes(List<Ville> lesEtapes) {
 		this.lesEtapes = lesEtapes;
-	}*/
+	}
 
 	/*public List<Float> getLesTarifs() {
 		return lesTarifs;

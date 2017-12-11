@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Login {
@@ -11,7 +12,8 @@ public class Login {
 	
 	private String password;// à hasher
 	
-	//private InfoUtilisateur infos;
+	@OneToOne
+	private InfoUtilisateur infos;//A un login, il y a un utilisateur (MD)
 
 	public String getLogin() {
 		return login;
@@ -29,13 +31,13 @@ public class Login {
 		this.password = password;
 	}
 	
-	/*public InfoUtilisateur getInfos() {
+	public InfoUtilisateur getInfos() {
 		return infos;
 	}
 
 	public void setInfos(InfoUtilisateur infos) {
 		this.infos = infos;
-	}*/
+	}
 	
 
 
