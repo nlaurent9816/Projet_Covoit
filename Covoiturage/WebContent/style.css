@@ -1,0 +1,45 @@
+.menu li{
+	display:inline;
+	margin:5px;
+	vertical-align:middle;
+	height:100%;
+	
+}
+
+.menu button{
+	color:black;
+	text-decoration:none;
+	height:100%;
+	width:10%;
+}
+
+.menu button:hover{
+	color:white;
+	background-color:#121111;
+}
+
+.menu ul{
+	height:100%;
+	text-align:center;
+}
+
+.menu button:active{
+	color:white;
+	background-color:#888a85;
+}
+
+.menu button:visited{
+	color:white;
+}
+
+.menu {
+
+	background-color:#494848;
+	height:30px;
+	width:100%;
+	
+}
+
+#connexion{
+	margin-top:10px;
+}

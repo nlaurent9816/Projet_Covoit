@@ -1,22 +1,33 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta charset="utf-8">
 <title>Covoiturage</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
-<nav class="menu">
-  <ul>
-  	<li><a href="#Apropos">Accueil</a></li><!--visible pour tout le monde, ramène sur la page d'accueil  -->
-  	<li><a href="#Apropos">Se connecter</a></li><!--visible que si non connecté, mène vers page de connexion  -->
-    <li><a href="#Contact">S'enregistrer</a></li><!--visible que si non connecté, mène vers page d'enregistrement  -->
-    <li><a href="#Accueil">Votre compte</a></li><!--visible que si connecté, contient liste des réservations, des trajets proposés  -->
-    <li><a href="#Apropos">Trouver un trajet</a></li><!--toujours visible, mène vers page de recherche avancée  -->
-    <li><a href="#Contact">Ajouter ville/voiture</a></li><!--Visible pour l'administrateur seulement  -->
-  </ul>
-</nav>
+
+
+
 <div style="height:500px; width:100%; background-color: #b3e6ff; display: table; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-<div align="center" style="display: table-cell; vertical-align: middle;">
+
+<div  align="center" style="display: table-cell; vertical-align: middle;">
+
+<nav class="menu">
+<form method="post">
+  <ul>
+  	<li><button type = "submit" name ="Nav" value="accueil">Accueil</button></li><!--visible pour tout le monde, ramène sur la page d'accueil  -->
+  	<!--<li><a href="#Apropos">Se connecter</a></li>visible que si non connecté, mène vers page de connexion  -->
+    <li><button type = "submit" name ="Nav" value="register">S'enregistrer</button></li><!--visible que si non connecté, mène vers page d'enregistrement  -->
+    <li><button type = "submit" name ="Nav" value="compte">Votre Compte</button></li><!--visible que si connecté, contient liste des réservations, des trajets proposés  -->
+    <li><button type = "submit" name ="Nav" value="recherche">Trouver un trajet</button></li><!--toujours visible, mène vers page de recherche avancée  -->
+    <li><button type = "submit" name ="Nav" value="ajout">Ajouter ville/voiture</button></li><!--Visible pour l'administrateur seulement  -->
+  </ul>
+</form>
+</nav>
+
 <div id=connexion>
 	Connectez-vous :
 	<form method="post">

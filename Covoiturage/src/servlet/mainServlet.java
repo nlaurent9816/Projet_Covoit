@@ -35,7 +35,32 @@ public class mainServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);	}
+		if(request.getParameter("Nav")!=null) {//on a cliqué sur la barre de navigation
+			switch (request.getParameter("Nav")) {
+			case "accueil":
+				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				break;
+			case "register":
+				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
+				break;
+			case "compte":
+				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				break;
+			case "recherche":
+				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				break;
+			case "ajout":
+				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				break;
+			default:
+				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				break;
+			}
+		}
+		else { //autre action que la barre de navigation
+			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+		}
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
