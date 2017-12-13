@@ -8,24 +8,16 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
-<!-- En tête -->
-<form method="post" class="menu">
-  <ul>
-  	<li><button type = "submit" name ="Nav" value="accueil">Accueil</button></li><!--visible pour tout le monde, ramène sur la page d'accueil  -->
-  	<!--<li><a href="#Apropos">Se connecter</a></li>visible que si non connecté, mène vers page de connexion  -->
-    <li><button type = "submit" name ="Nav" value="register">S'enregistrer</button></li><!--visible que si non connecté, mène vers page d'enregistrement  -->
-    <li><button type = "submit" name ="Nav" value="compte">Votre Compte</button></li><!--visible que si connecté, contient liste des réservations, des trajets proposés  -->
-    <li><button type = "submit" name ="Nav" value="recherche">Trouver un trajet</button></li><!--toujours visible, mène vers page de recherche avancée  -->
-    <li><button type = "submit" name ="Nav" value="ajout">Ajouter ville/voiture</button></li><!--Visible pour l'administrateur seulement  -->
-  </ul>
-</form>
+
+<%@include file="header.jsp" %>
+
 
 <!-- Champ de recherche -->
 <div style="height:500px; width:100%; background-color: #b3e6ff; display: table;">
 
 <div  align="center" style="display: table-cell; vertical-align: middle;">
 
-<!--div id=connexion>
+<!-- div id=connexion>
 	Connectez-vous :
 	<form method="post">
 		Login :<input type ="text" name ="login"/>
@@ -45,10 +37,7 @@ Vers
 </div>
 </div>
 
-<!-- Pied de page -->
+<%@include file="footer.jsp" %>
 
-<div align="right" class="bottom">
-	Site réalisé par Manuel Ory et Nicolas Laurent - 2017
-</div>
 </body>
 </html>
