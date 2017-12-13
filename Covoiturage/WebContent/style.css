@@ -7,15 +7,16 @@
 }
 
 .menu button{
-	color:black;
+	color:#d3d7cf;
+	background-color:inherit;
 	text-decoration:none;
+	border:window;
 	height:100%;
-	width:10%;
 }
 
 .menu button:hover{
-	color:white;
-	background-color:#121111;
+	color:#2e3436;
+	background-color:#b3e6ff;
 }
 
 .menu ul{
@@ -28,16 +29,23 @@
 	background-color:#888a85;
 }
 
-.menu button:visited{
-	color:white;
-}
 
 .menu {
 
 	background-color:#494848;
-	height:30px;
+	height:50px;
 	width:100%;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
 	
+}
+
+.bottom{
+	padding: 10px; 
+	background-color: #f2f2f2;
+	color:#2e3436; 
+	border-bottom-left-radius: 12px; 
+	border-bottom-right-radius: 12px;
 }
 
 #connexion{

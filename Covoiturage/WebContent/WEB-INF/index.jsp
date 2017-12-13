@@ -8,15 +8,8 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
-
-
-
-<div style="height:500px; width:100%; background-color: #b3e6ff; display: table; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-
-<div  align="center" style="display: table-cell; vertical-align: middle;">
-
-<nav class="menu">
-<form method="post">
+<!-- En tête -->
+<form method="post" class="menu">
   <ul>
   	<li><button type = "submit" name ="Nav" value="accueil">Accueil</button></li><!--visible pour tout le monde, ramène sur la page d'accueil  -->
   	<!--<li><a href="#Apropos">Se connecter</a></li>visible que si non connecté, mène vers page de connexion  -->
@@ -26,9 +19,13 @@
     <li><button type = "submit" name ="Nav" value="ajout">Ajouter ville/voiture</button></li><!--Visible pour l'administrateur seulement  -->
   </ul>
 </form>
-</nav>
 
-<div id=connexion>
+<!-- Champ de recherche -->
+<div style="height:500px; width:100%; background-color: #b3e6ff; display: table;">
+
+<div  align="center" style="display: table-cell; vertical-align: middle;">
+
+<!--div id=connexion>
 	Connectez-vous :
 	<form method="post">
 		Login :<input type ="text" name ="login"/>
@@ -36,7 +33,7 @@
 		MDP : <input type ="password" name ="mdp"/>
 		<button type = "submit" name ="todo" value="connect">Connexion</button>
 	</form>
-</div>
+</div-->
 <h1 style="font-size: 60px; margin-bottom: 20px;">Covoiturage !</h1>
 <div  style="font-size: 30px; display: table-cell; text-align: center;">
 De
@@ -47,7 +44,10 @@ Vers
 <button style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
 </div>
 </div>
-<div align="right" style="padding: 10px; background-color: #f2f2f2;color:gray; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+
+<!-- Pied de page -->
+
+<div align="right" class="bottom">
 	Site réalisé par Manuel Ory et Nicolas Laurent - 2017
 </div>
 </body>
