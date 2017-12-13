@@ -36,6 +36,17 @@ public class InfoUtilisateur {
 	@OneToMany(mappedBy="passager")
 	private List<Reservation> mesTrajetsRéservés;//un utilisateur peut avoir plusieurs réservations (BD)
 	
+	public InfoUtilisateur(String newNom, String newPrenom, String newSexe, String newTel, String newMail){
+		this.nom=newNom;
+		this.prenom=newPrenom;
+		this.sexe=newSexe;
+		this.tel=newTel;
+		this.mail=newMail;
+	}
+	
+	public InfoUtilisateur(){	
+	}
+	
 	public int getIdInfo() {
 		return idInfo;
 	}
