@@ -8,6 +8,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import entity.InfoUtilisateur;
 import entity.Login;
@@ -35,6 +36,18 @@ public class Facade {
 			Login l = new Login(login, passwordHash, iu);
 			em.persist(l);
 	}
-
+	
+	public boolean checkUtilisateur(String login, String password) throws NoSuchAlgorithmException {
+		
+		//on hash le mot de passe
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		byte[] encodedhash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+		String passwordHash = new String(encodedhash);
+		Query q = em.createQuery("From Login l where l.login=:log AND l.password=:pass");
+		q.setParameter("log", login);
+		q.setParameter("pass", passwordHash);
+		return q.getResultList().size()==1;
+		
+	}
 
 }
