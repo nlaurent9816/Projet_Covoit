@@ -133,6 +133,9 @@ public class mainServlet extends HttpServlet {
 				return;
 			}
 		}
+		else {
+			request.setAttribute("connecte", "true");
+		}
 		
 		//si clic sur barre de navigation
 		if(request.getParameter("Nav")!=null) {//on a cliqué sur la barre de navigation
