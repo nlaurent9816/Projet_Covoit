@@ -51,6 +51,22 @@ public class Trajet {
 	private List<Tarif> lesTarifs; // n+1 tarifs le premier étant le tarif depuis la ville de départ
 	
 	private int nombrePlaces;
+	
+	public Trajet() {
+	}
+	
+	public Trajet(InfoUtilisateur conducteur, Vehicule gabarit_vehicule, String descVehicule, String date, String heure, Ville depart, Ville arrivee, List<Ville> etapes, List<Tarif> tarifs, int places) {
+		this.conducteur=conducteur;
+		this.gabaritVehicule=gabarit_vehicule;
+		this.monVehicule=descVehicule;
+		this.dateDepart=date;
+		this.heureDepart=heure;
+		this.villeDepart=depart;
+		this.villeArrivee=arrivee;
+		this.lesEtapes=etapes;
+		this.lesTarifs=tarifs;
+		this.nombrePlaces=places;
+	}
 
 	public int getIdTrajet() {
 		return idTrajet;

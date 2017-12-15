@@ -8,11 +8,19 @@ import javax.persistence.Id;
 public class Tarif {
 
 	
+		
 		@Id	@GeneratedValue
 		private int id;
 		
 		private Float valeur;
 
+		public Tarif() {	
+		}
+		
+		public Tarif(Float val) {
+			this.valeur=val;
+		}
+		
 		public int getId() {
 			return id;
 		}

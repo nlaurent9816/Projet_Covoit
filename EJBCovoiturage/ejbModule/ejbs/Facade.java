@@ -14,6 +14,8 @@ import javax.persistence.Query;
 
 import entity.InfoUtilisateur;
 import entity.Login;
+import entity.Tarif;
+import entity.Trajet;
 import entity.Vehicule;
 import entity.Ville;
 
@@ -26,6 +28,50 @@ public class Facade {
 	
 	@PersistenceContext(unitName="monUnite")
 	EntityManager em;
+	
+	public void enregistrerTrajet(String conducteur, String vehicule_desc, String vehicule_gabarit, String date_trajet, String heure_trajet, String ville_depart, String ville_arrivee, String tarif_trajet, String[] etapes_trajet, String[] tarifs_etapes, String place_trajet) {
+		
+		//construire la liste des tarifs et des étapes
+		List<Tarif> tarifsTrajet = new ArrayList<Tarif>();
+		Tarif tarifTrajet = new Tarif(Float.parseFloat(tarif_trajet));
+		em.persist(tarifTrajet);
+		tarifsTrajet.add(tarifTrajet);
+		List<Ville> etapes = new ArrayList<Ville>();
+		Query q;
+		if(tarifs_etapes.length>0) {
+			for(int i =0;i<tarifs_etapes.length;i++) {
+				Tarif t = new Tarif(Float.parseFloat(tarifs_etapes[i]));
+				em.persist(t);
+				tarifsTrajet.add(t);
+				q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+				q.setParameter("maVille", etapes_trajet[i]);
+				Ville v = (Ville) q.getSingleResult();
+				etapes.add(v);		
+			}
+		}
+		
+		//get infoUtilisateur conducteur
+		q = em.createQuery("FROM Login login WHERE login.login= :monLogin");
+		q.setParameter("monLogin", conducteur);
+		Login log_conducteur = (Login) q.getSingleResult();
+		
+		//get vehicule
+		q=em.createQuery("FROM Vehicule v WHERE v.gabaritVehicule= :gabarit");
+		q.setParameter("gabarit", vehicule_gabarit);
+		Vehicule gabarit_vehicule = (Vehicule) q.getSingleResult();
+		
+		//get Ville départ
+		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+		q.setParameter("maVille", ville_depart);
+		Ville villeDepart = (Ville) q.getSingleResult();
+		
+		//get Ville Arrivée
+		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+		q.setParameter("maVille", ville_arrivee);
+		Ville villeArrivee = (Ville) q.getSingleResult();
+		Trajet monTrajet = new Trajet(log_conducteur.getInfos(), gabarit_vehicule, vehicule_desc, date_trajet, heure_trajet, villeDepart, villeArrivee, etapes, tarifsTrajet, Integer.parseInt(place_trajet));
+		em.persist(monTrajet);
+	}
 	
 	public void enregistrerUtilisateur(String nom, String prenom, String sexe, String tel, String email, String login, String password) throws NoSuchAlgorithmException {
 		//on enregistre des infos de l'utilisateur

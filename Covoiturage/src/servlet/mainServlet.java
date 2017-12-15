@@ -36,7 +36,7 @@ public class mainServlet extends HttpServlet {
 			String tel = (String) request.getParameter("tel");
 			String email = (String) request.getParameter("email");
 			String login = (String) request.getParameter("login");
-			if(nom!=null && prenom!=null && sexe!=null && tel!=null && email!=null && login!=null) {
+			if(!nom.equals("") && !prenom.equals("") && sexe!=null && !tel.equals("") && !email.equals("") && !login.equals("")) {
 				//on enregistre le nouvel utilisateur
 				try {
 					facade.enregistrerUtilisateur(nom, prenom, sexe, tel, email, login, password);
@@ -58,6 +58,46 @@ public class mainServlet extends HttpServlet {
 
 	}
     
+    private void registerTrajet(HttpServletRequest request, HttpServletResponse response, String conducteur) throws ServletException, IOException {
+    	String vehicule_desc = (String) request.getParameter("vehiculeDesc");
+		String vehicule_gabarit = (String) request.getParameter("vehiculeGabarit");
+		String date_trajet = (String) request.getParameter("dateTrajet");
+		String heure_trajet = (String) request.getParameter("heureTrajet");
+		String minute_trajet=(String) request.getParameter("minuteTrajet");
+		heure_trajet=heure_trajet+" h "+minute_trajet;
+		String ville_depart = (String) request.getParameter("villeDepart");
+		String ville_arrivee = (String) request.getParameter("villeArrivee");
+		String tarif_trajet = (String) request.getParameter("tarifTrajet");
+		String[] etapes_trajet = (String[]) request.getParameterValues("etapeTrajet");
+		String[] tarifs_etapes = (String[]) request.getParameterValues("tarifEtape");
+		String place_trajet = (String) request.getParameter("placeTrajet");
+		if(vehicule_desc==null) {
+			System.out.println("Say Hello !");
+		}
+		System.out.println(vehicule_desc+ " "+vehicule_gabarit+" "+date_trajet+" "+heure_trajet+" "+ville_depart+" "+ville_arrivee+" "+tarif_trajet+" "+place_trajet);
+		for(int i =0; i<etapes_trajet.length;i++) {
+			System.out.println(etapes_trajet[i]+" "+tarifs_etapes[i]);
+		}
+		
+		if(!(conducteur.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals("")) && (tarifs_etapes.length==etapes_trajet.length)) 
+		{
+				//on enregistre le nouveau trajet
+			System.out.println("Tentative d'enregistrement du trajet...");
+				facade.enregistrerTrajet(conducteur, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
+			System.out.println("Trajet enregistré");
+				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+		}
+		else {
+			System.out.println("Il manque des informations");
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
+		}
+			
+		
+
+	}
+    
     private void connectUtilisateur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String password = (String) request.getParameter("mdp");
 		String login = (String) request.getParameter("login");
@@ -71,7 +111,6 @@ public class mainServlet extends HttpServlet {
 				System.out.println("Connexion échouée");
 			}
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//que la connexion ait réussi ou non, on revient sur page index
@@ -156,6 +195,9 @@ public class mainServlet extends HttpServlet {
 				switch(todo) {
 				case "register" :
 					this.registerUtilisateur(request, response);
+					break;
+				case "newTrajet" :
+					this.registerTrajet(request, response, currentLogin);
 					break;
 				default:
 					request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);

@@ -12,6 +12,12 @@ public class Ville {
 	
 	private String ville;
 
+	public Ville() {	
+	}
+	
+	public Ville(String maVille) {
+		this.ville=maVille;
+	}
 	public int getId() {
 		return id;
 	}
