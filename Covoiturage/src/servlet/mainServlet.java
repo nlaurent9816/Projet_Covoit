@@ -98,6 +98,12 @@ public class mainServlet extends HttpServlet {
 		case "ajout":
 			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
 			break;
+		case "ajoutTrajet":
+			//faire passer la liste des villes et des véhicules
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
+			break;
 		default:
 			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
 			break;

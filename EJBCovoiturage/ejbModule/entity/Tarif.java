@@ -5,13 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Vehicule {
+public class Tarif {
 
 	
 		@Id	@GeneratedValue
 		private int id;
 		
-		private String gabaritVehicule;
+		private Float valeur;
 
 		public int getId() {
 			return id;
@@ -21,13 +21,16 @@ public class Vehicule {
 			this.id = id;
 		}
 
-		public String getGabaritVehicule() {
-			return gabaritVehicule;
+		public Float getValeur() {
+			return valeur;
 		}
 
-		public void setGabaritVehicule(String gabaritVehicule) {
-			this.gabaritVehicule = gabaritVehicule;
+		public void setValeur(Float valeur) {
+			this.valeur = valeur;
 		}
+
+		
+
 		
 		
 }

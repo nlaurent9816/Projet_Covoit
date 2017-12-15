@@ -24,7 +24,7 @@ public class Trajet {
 	private List<Reservation> passagers;
 	
 	@ManyToOne
-	private Vehicule typeVehicule;
+	private Vehicule gabaritVehicule;
 	
 	private String monVehicule;
 	
@@ -47,7 +47,8 @@ public class Trajet {
 				@JoinColumn(name="id_etape"))
 	private List<Ville> lesEtapes;  // n étapes 
 	
-	//private List<Float> lesTarifs; // n+1 tarifs le premier étant le tarif depuis la ville de départ
+	@OneToMany
+	private List<Tarif> lesTarifs; // n+1 tarifs le premier étant le tarif depuis la ville de départ
 	
 	private int nombrePlaces;
 
@@ -68,11 +69,11 @@ public class Trajet {
 	}
 
 	public Vehicule getTypeVehicule() {
-		return typeVehicule;
+		return gabaritVehicule;
 	}
 
 	public void setTypeVehicule(Vehicule typeVehicule) {
-		this.typeVehicule = typeVehicule;
+		this.gabaritVehicule = typeVehicule;
 	}
 
 	public String getMonVehicule() {

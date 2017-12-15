@@ -31,7 +31,7 @@
 </c:if>
 
 <c:if test = "${connecte}">
-Bienvenue ${login}
+Vous êtes connecté.
 </c:if>
 
 <h1 style="font-size: 60px; margin-bottom: 20px;">Covoiturage !</h1>
