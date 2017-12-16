@@ -35,13 +35,26 @@ Vous êtes connecté.
 </c:if>
 
 <h1 style="font-size: 60px; margin-bottom: 20px;">Covoiturage !</h1>
-<div  style="font-size: 30px; display: table-cell; text-align: center;">
-De
-<input type="text" placeholder="Départ" style=" padding:5px; font-size: inherit;" >
-Vers
-<input type="text" placeholder="Arrivée" style=" padding:5px; font-size: inherit;" >
-</div>
-<button style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
+<form id="recherche" method="post" class="simpleForm">
+	<div  style="font-size: 30px; display: table-cell; text-align: center;">
+
+	<span>De</span>
+	<select name="villeDepart" size="1" style=" padding:5px; font-size: inherit;">
+		<c:forEach items="${listeVilles}" var="v">
+			<option>${v}</option>
+		</c:forEach>
+	</select>
+
+	<span>Vers</span>
+	<select name="villeArrivee" size="1" style=" padding:5px; font-size: inherit;">
+		<c:forEach items="${listeVilles}" var="v">
+			<option>${v}</option>
+		</c:forEach>
+	</select>
+
+	</div>
+	<button type="submit" name="todo" value="recherche" style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
+</form>
 </div>
 </div>
 

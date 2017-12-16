@@ -3,7 +3,10 @@ package ejbs;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -12,6 +15,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import dto.TrajetDTO;
+import entity.Etape;
 import entity.InfoUtilisateur;
 import entity.Login;
 import entity.Tarif;
@@ -29,27 +34,86 @@ public class Facade {
 	@PersistenceContext(unitName="monUnite")
 	EntityManager em;
 	
+	public List<TrajetDTO> getTrajets(String ville_depart, String ville_arrivee){
+		//get Ville départ
+		Query q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+		q.setParameter("maVille", ville_depart);
+		Ville villeDepart = (Ville) q.getSingleResult();
+				
+		//get Ville Arrivée
+		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+		q.setParameter("maVille", ville_arrivee);
+		Ville villeArrivee = (Ville) q.getSingleResult();
+		
+		Date d=new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String date = dateFormat.format(d);
+		System.out.println(date);
+		
+		q = em.createQuery("From Trajet t WHERE t.villeDepart= :ville_depart" ); //AND t.dateDepart >= :date_depart
+		q.setParameter("ville_depart", villeDepart);
+		//q.setParameter("date_depart", date);
+		List<Trajet> trajetsPotentiels = (List<Trajet>) q.getResultList();
+		System.out.println("Nombre de trajets donnés par requête :" + trajetsPotentiels.size());
+		List<Trajet> trajetsRecherchesTemp = new ArrayList<Trajet>();
+		List<TrajetDTO> trajetsRecherches = new ArrayList<TrajetDTO>();
+		for (Trajet t : trajetsPotentiels) {
+			List<Etape> etapes = t.getLesEtapes();
+			for (Etape e : etapes) {
+				if(e.getVille().equals(villeArrivee)) {
+					//on vient de trouver un trajet qui nous intéresse
+					trajetsRecherchesTemp.add(t);
+				}
+			}
+		}
+		
+		//on remplit notre liste de trajet DTO que l'on va renvoyer
+		for (Trajet t : trajetsRecherchesTemp) {
+			List<Float> tarifs =new ArrayList<Float>();
+			List<String> etapeString = new ArrayList<String>();
+			List<Etape> etapes = t.getLesEtapes();
+			for (Etape e : etapes) {
+				etapeString.add(e.getVille().getVille());
+				tarifs.add(e.getTarif().getValeur());
+				
+			}
+			TrajetDTO t_dto = new TrajetDTO(t.getConducteur().getNom(), t.getConducteur().getPrenom(), t.getDateDepart(), t.getHeureDepart(), t.getTypeVehicule().getGabaritVehicule(), t.getNombrePlaces(), t.getMonVehicule(), t.getVilleDepart().getVille(), etapeString, tarifs);
+			trajetsRecherches.add(t_dto);
+		}
+		
+		return trajetsRecherches;
+	}
+	
 	public void enregistrerTrajet(String conducteur, String vehicule_desc, String vehicule_gabarit, String date_trajet, String heure_trajet, String ville_depart, String ville_arrivee, String tarif_trajet, String[] etapes_trajet, String[] tarifs_etapes, String place_trajet) {
 		
-		//construire la liste des tarifs et des étapes
-		List<Tarif> tarifsTrajet = new ArrayList<Tarif>();
-		Tarif tarifTrajet = new Tarif(Float.parseFloat(tarif_trajet));
-		em.persist(tarifTrajet);
-		tarifsTrajet.add(tarifTrajet);
-		List<Ville> etapes = new ArrayList<Ville>();
+		//construire la liste des étapes
+		
+		List<Etape> etapes = new ArrayList<Etape>();
 		Query q;
 		if(tarifs_etapes.length>0) {
 			for(int i =0;i<tarifs_etapes.length;i++) {
 				Tarif t = new Tarif(Float.parseFloat(tarifs_etapes[i]));
 				em.persist(t);
-				tarifsTrajet.add(t);
 				q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
 				q.setParameter("maVille", etapes_trajet[i]);
 				Ville v = (Ville) q.getSingleResult();
-				etapes.add(v);		
+				Etape e = new Etape(v, t);
+				em.persist(e);
+				etapes.add(e);
 			}
 		}
 		
+		Tarif tarifTrajet = new Tarif(Float.parseFloat(tarif_trajet));
+		em.persist(tarifTrajet);
+		
+		//get Ville Arrivée
+		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+		q.setParameter("maVille", ville_arrivee);
+		Ville villeArrivee = (Ville) q.getSingleResult();
+		
+		Etape arrivee = new Etape(villeArrivee, tarifTrajet);
+		em.persist(arrivee);
+		etapes.add(arrivee);
 		//get infoUtilisateur conducteur
 		q = em.createQuery("FROM Login login WHERE login.login= :monLogin");
 		q.setParameter("monLogin", conducteur);
@@ -65,11 +129,8 @@ public class Facade {
 		q.setParameter("maVille", ville_depart);
 		Ville villeDepart = (Ville) q.getSingleResult();
 		
-		//get Ville Arrivée
-		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
-		q.setParameter("maVille", ville_arrivee);
-		Ville villeArrivee = (Ville) q.getSingleResult();
-		Trajet monTrajet = new Trajet(log_conducteur.getInfos(), gabarit_vehicule, vehicule_desc, date_trajet, heure_trajet, villeDepart, villeArrivee, etapes, tarifsTrajet, Integer.parseInt(place_trajet));
+		
+		Trajet monTrajet = new Trajet(log_conducteur.getInfos(), gabarit_vehicule, vehicule_desc, date_trajet, heure_trajet, villeDepart, etapes, Integer.parseInt(place_trajet));
 		em.persist(monTrajet);
 	}
 	

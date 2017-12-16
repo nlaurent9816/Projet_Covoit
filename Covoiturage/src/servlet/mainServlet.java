@@ -25,6 +25,12 @@ public class mainServlet extends HttpServlet {
 	private Facade facade; 
 	
 	private static final long serialVersionUID = 1L;
+	
+	private void goAccueil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("listeVilles", facade.getNameVille());
+		request.setAttribute("listeVehicules", facade.getNameVehicule());
+		request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+	}
     
     private void registerUtilisateur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String password = (String) request.getParameter("mdp");
@@ -43,7 +49,8 @@ public class mainServlet extends HttpServlet {
 				} catch (NoSuchAlgorithmException e) {
 					e.printStackTrace();
 				}
-				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				
+				goAccueil(request, response);
 			}
 			else {
 				System.out.println("Il manque des informations");
@@ -85,7 +92,7 @@ public class mainServlet extends HttpServlet {
 			System.out.println("Tentative d'enregistrement du trajet...");
 				facade.enregistrerTrajet(conducteur, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
 			System.out.println("Trajet enregistré");
-				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				goAccueil(request, response);
 		}
 		else {
 			System.out.println("Il manque des informations");
@@ -116,14 +123,14 @@ public class mainServlet extends HttpServlet {
 		//que la connexion ait réussi ou non, on revient sur page index
 		//ajouter un message d'erreur si connexion non réussie
 		
-		request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+		goAccueil(request, response);
 
 	}
     
     private void navigation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	switch (request.getParameter("Nav")) {
 		case "accueil":
-			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			goAccueil(request, response);
 			break;
 		case "register":
 			request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
@@ -132,7 +139,9 @@ public class mainServlet extends HttpServlet {
 			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
 			break;
 		case "recherche":
-			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
 			break;
 		case "ajout":
 			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
@@ -189,7 +198,7 @@ public class mainServlet extends HttpServlet {
 		else {//autre action que la barre de navigation
 			//si pas sur un clic de bouton, on revient page d'accueil
 			if(todo==null) {
-				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				goAccueil(request, response);
 			}
 			else {
 				switch(todo) {
@@ -199,8 +208,12 @@ public class mainServlet extends HttpServlet {
 				case "newTrajet" :
 					this.registerTrajet(request, response, currentLogin);
 					break;
+				case "recherche" :
+					System.out.println("Hello ?");
+					this.rechercheTrajet(request, response);
+					break;
 				default:
-					request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+					goAccueil(request, response);
 					break;
 				
 				}
@@ -209,7 +222,16 @@ public class mainServlet extends HttpServlet {
 	}
 
 	
-	
+	private void rechercheTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String villeDep = (String) request.getParameter("villeDepart");
+		String villeArr = (String) request.getParameter("villeArrivee");
+		
+		request.setAttribute("listeTrajets", facade.getTrajets(villeDep, villeArr));
+		request.setAttribute("listeVilles", facade.getNameVille());
+		request.setAttribute("listeVehicules", facade.getNameVehicule());
+		request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
