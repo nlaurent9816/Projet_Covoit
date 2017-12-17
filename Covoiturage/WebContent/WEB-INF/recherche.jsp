@@ -35,27 +35,26 @@
 
 <c:forEach items="${listeTrajets}" var="t">
 		<div class="trajet">
-			<span>Départ le ${t.dateDepart} à ${t.heureDepart}</span><br/> <span> de ${t.villeDepart} vers</span>
+			<span>Départ le ${t.dateDepart} à ${t.heureDepart}</span><br/> <span> de ${t.villeDepart.ville} vers</span>
 			<div>
 			
 				<form id="Reservation" method="post">
 		     		<ul>
-						<c:forEach items="${t.etapes}" var="etape" varStatus="loop">
-								<li> ${etape} pour ${t.tarifs[loop.index]} €</li>
-								<input type="radio" name="arrivee" value="${etape}"/>
-								<input type="hidden" name="tarif" value="${t.tarifs[loop.index]}"/><!--  probleme ici : on récupère que le premier élément dans la servlet -->
+						<c:forEach items="${t.lesEtapes}" var="etape" varStatus="loop">
+								<li> ${etape.ville.ville} pour ${etape.tarif} €</li>
+								<c:if test = "${connecte}"><input type="radio" name="arrivee" value="${etape.id}"/></c:if>
 						</c:forEach>
 					</ul>
-					<span>Conducteur : ${t.conducteurNom} ${t.conducteurPrenom}</span><br/>
-					<span>Voiture : ${t.gabaritVehicule} ${t.descriptionVehicule}</span><br/>
-					<span>Il reste ${t.nombrePlaces } places</span>
+					<span>Conducteur : ${t.conducteur.nom} ${t.conducteur.prenom}</span><br/>
+					<span>Voiture : ${t.gabaritVehicule.gabaritVehicule} ${t.monVehicule}</span><br/>
+					<span>Il reste ${t.nombrePlacesRestantes } places</span>
 					
 					
 					<c:if test = "${connecte}">
 						
 						<label>Nombre de places à réserver : </label> 
 						<select name="nbPlaces" size="1" style=" padding:5px; font-size: inherit;">
-							<c:forEach var="nb" begin="1" end="${ t.nombrePlaces}">
+							<c:forEach var="nb" begin="1" end="${ t.nombrePlacesRestantes}">
 								<option>${nb}</option>
 							</c:forEach>
 						</select>

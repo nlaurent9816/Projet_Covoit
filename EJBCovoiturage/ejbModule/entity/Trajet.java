@@ -47,6 +47,8 @@ public class Trajet {
 	
 	private int nombrePlaces;
 	
+	private int nombrePlacesRestantes;
+
 	public Trajet() {
 	}
 	
@@ -59,6 +61,7 @@ public class Trajet {
 		this.villeDepart=depart;
 		this.lesEtapes=etapes;
 		this.nombrePlaces=places;
+		this.nombrePlacesRestantes=places;
 	}
 
 	public int getIdTrajet() {
@@ -148,6 +151,14 @@ public class Trajet {
 
 	public void setGabaritVehicule(Vehicule gabaritVehicule) {
 		this.gabaritVehicule = gabaritVehicule;
+	}
+	
+	public int getNombrePlacesRestantes() {
+		return nombrePlacesRestantes;
+	}
+
+	public void setNombrePlacesRestantes(int nombrePlacesRestantes) {
+		this.nombrePlacesRestantes = nombrePlacesRestantes;
 	}
 
 

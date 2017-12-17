@@ -226,7 +226,6 @@ public class mainServlet extends HttpServlet {
 					this.registerTrajet(request, response);
 					break;
 				case "recherche" :
-					System.out.println("Hello ?");
 					this.rechercheTrajet(request, response);
 					break;
 				case "reservation":
@@ -235,6 +234,18 @@ public class mainServlet extends HttpServlet {
 				case "VerifReservation":
 					System.out.println("Je veux vérifier les réservations du trajet N° "+ request.getParameter("idTrajet"));
 					this.goAccueil(request, response);
+					break;
+				case "AnnulerReservation":
+					this.facade.annulerReservation(Integer.parseInt(request.getParameter("idReservation")));
+					request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
+					request.setAttribute("listeReservations", facade.getReservations(currentLogin));
+					request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
+					break;
+				case "SupprimerTrajet" :
+					this.facade.supprimerTrajet(Integer.parseInt(request.getParameter("idTrajet")));
+					request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
+					request.setAttribute("listeReservations", facade.getReservations(currentLogin));
+					request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
 					break;
 				default:
 					this.goAccueil(request, response);
@@ -248,12 +259,10 @@ public class mainServlet extends HttpServlet {
 	private void reserverTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int idTrajet = Integer.parseInt(request.getParameter("idTrajet"));
 		int nbPlaces = Integer.parseInt(request.getParameter("nbPlaces"));
-		float tarif = Float.parseFloat(request.getParameter("tarif"));
-		String arrivee = request.getParameter("arrivee");
-		System.out.println("Jai réservé le trajet N° "+idTrajet+" pour destination de "+arrivee+" pour "+tarif+" euros et avec " + nbPlaces + "  passagers et je suis "+currentLogin+" !");
-
-		if(arrivee!=null) {
-			facade.reserverTrajet(idTrajet, nbPlaces,currentLogin, arrivee, tarif);
+		if(request.getParameter("arrivee")!=null) {
+			int idEtapeArrivee = Integer.parseInt(request.getParameter("arrivee"));
+			System.out.println("Jai réservé le trajet N° "+idTrajet+" pour destination de "+idEtapeArrivee+"  et avec " + nbPlaces + "  passagers et je suis "+currentLogin+" !");
+			facade.reserverTrajet(idTrajet, nbPlaces,currentLogin, idEtapeArrivee);
 		}
 		else {
 			System.out.println("Vous n'avez pas choisi d'étapes d'arrivée !");

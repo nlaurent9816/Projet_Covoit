@@ -15,12 +15,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import dto.TrajetDTO;
 import entity.Etape;
 import entity.InfoUtilisateur;
 import entity.Login;
 import entity.Reservation;
-import entity.Tarif;
 import entity.Trajet;
 import entity.Vehicule;
 import entity.Ville;
@@ -35,25 +33,55 @@ public class Facade {
 	@PersistenceContext(unitName="monUnite")
 	EntityManager em;
 	
-	public List<TrajetDTO> getTrajetConducteur(String loginConducteur){
+	public List<Trajet> getTrajetConducteur(String loginConducteur){
 		Query q = em.createQuery("SELECT t FROM Trajet t, InfoUtilisateur info, Login l WHERE l.login=:loginConducteur AND  l.infos=info AND t.conducteur=info");
 		q.setParameter("loginConducteur", loginConducteur);
-		List<Trajet> mesTrajetsTemp = (List<Trajet>) q.getResultList();
-		List<TrajetDTO> mesTrajets = new ArrayList<TrajetDTO>();
-		for( Trajet t : mesTrajetsTemp) {
-			mesTrajets.add(trajetToTrajetDTO(t));
-		}
+		List<Trajet> mesTrajets = (List<Trajet>) q.getResultList();
 		return mesTrajets;
+	}
+	
+	public void annulerReservation(int idRes) {
+		//on modifie le nombres de places restantes pour le trajet correspondant
+		Reservation maRes = em.find(Reservation.class, idRes);
+		Query q = em.createQuery("UPDATE Trajet t SET t.nombrePlacesRestantes = t.nombrePlacesRestantes + :nbReserves WHERE t.idTrajet = :idTrajet");
+		q.setParameter("nbReserves", maRes.getNombrePlace());
+		q.setParameter("idTrajet", maRes.getLeTrajet().getIdTrajet());
+		q.executeUpdate();
+		em.remove(maRes);
+		
+	}
+	
+	public void supprimerTrajet(int idTrajet) {
+		
+		Trajet leTrajet=em.find(Trajet.class, idTrajet);
+		//supprimer les réservations correspondantes
+		Query q = em.createQuery("FROM Reservation r WHERE r.leTrajet= :trajet");
+		q.setParameter("trajet", leTrajet);
+		List<Reservation> lesRes = q.getResultList();
+		for(Reservation r : lesRes) {
+			em.remove(r);
+		}
+		
+		//Supprimer les étapes correspondantes
+		//on récupère les étapes à supprimer
+		q=em.createQuery("SELECT t.lesEtapes FROM Trajet t WHERE t= :trajet");
+		q.setParameter("trajet", leTrajet);
+		List<Etape> lesEtapes = (List<Etape>) q.getResultList();
+		for (Etape e : lesEtapes) {
+			em.remove(e);
+		}
+		//Supprimer le trajet en lui-même
+		em.remove(leTrajet);
 	}
 	
 	public List<Reservation> getReservations(String currentLogin){
 		Query q = em.createQuery("SELECT r FROM Reservation r, InfoUtilisateur info, Login l WHERE l.login=:loginConducteur AND  l.infos=info AND info=r.passager");
 		q.setParameter("loginConducteur", currentLogin);
-		List<Reservation> mesReservationsTemp = (List<Reservation>) q.getResultList();
-		System.out.println("Nombre de reserv retournées : " + mesReservationsTemp.size());
-		return mesReservationsTemp;
+		List<Reservation> mesReservations = (List<Reservation>) q.getResultList();
+		System.out.println("Nombre de reserv retournées : " + mesReservations.size());
+		return mesReservations;
 	}
-	public List<TrajetDTO> getTrajets(String ville_depart, String ville_arrivee){
+	public List<Trajet> getTrajets(String ville_depart, String ville_arrivee){
 		//get Ville départ
 		Query q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
 		q.setParameter("maVille", ville_depart);
@@ -74,45 +102,21 @@ public class Facade {
 		//q.setParameter("date_depart", date);
 		List<Trajet> trajetsPotentiels = (List<Trajet>) q.getResultList();
 		System.out.println("Nombre de trajets donnés par requête :" + trajetsPotentiels.size());
-		List<Trajet> trajetsRecherchesTemp = new ArrayList<Trajet>();
-		List<TrajetDTO> trajetsRecherches = new ArrayList<TrajetDTO>();
+		List<Trajet> trajetsRecherches = new ArrayList<Trajet>();
+
 		for (Trajet t : trajetsPotentiels) {
 			List<Etape> etapes = t.getLesEtapes();
 			for (Etape e : etapes) {
 				if(e.getVille().equals(villeArrivee)) {
 					//on vient de trouver un trajet qui nous intéresse
-					trajetsRecherchesTemp.add(t);
+					trajetsRecherches.add(t);
 				}
 			}
-		}
-		
-		//on remplit notre liste de trajet DTO que l'on va renvoyer
-		for (Trajet t : trajetsRecherchesTemp) {
-			trajetsRecherches.add(trajetToTrajetDTO(t));
 		}
 		
 		return trajetsRecherches;
 	}
 	
-	public TrajetDTO trajetToTrajetDTO(Trajet t) {
-		List<Float> tarifs =new ArrayList<Float>();
-		List<String> etapeString = new ArrayList<String>();
-		List<Etape> etapes = t.getLesEtapes();
-		for (Etape e : etapes) {
-			etapeString.add(e.getVille().getVille());
-			tarifs.add(e.getTarif().getValeur());
-			
-		}
-		int nombrePlacesRestantes=t.getNombrePlaces();
-		Query q=em.createQuery("FROM Reservation r WHERE leTrajet=:trajetActuel");
-		q.setParameter("trajetActuel", t);
-		List<Reservation> reservations = q.getResultList();
-		for (Reservation r : reservations) {
-			nombrePlacesRestantes=nombrePlacesRestantes-r.getNombrePlace();
-		}
-		TrajetDTO t_dto = new TrajetDTO(t.getConducteur().getNom(), t.getConducteur().getPrenom(), t.getDateDepart(), t.getHeureDepart(), t.getTypeVehicule().getGabaritVehicule(), nombrePlacesRestantes, t.getMonVehicule(), t.getVilleDepart().getVille(), etapeString, tarifs, t.getIdTrajet());
-		return t_dto;
-	}
 	
 	public void enregistrerTrajet(String conducteur, String vehicule_desc, String vehicule_gabarit, String date_trajet, String heure_trajet, String ville_depart, String ville_arrivee, String tarif_trajet, String[] etapes_trajet, String[] tarifs_etapes, String place_trajet) {
 		
@@ -122,26 +126,21 @@ public class Facade {
 		Query q;
 		if(tarifs_etapes.length>0) {
 			for(int i =0;i<tarifs_etapes.length;i++) {
-				Tarif t = new Tarif(Float.parseFloat(tarifs_etapes[i]));
-				em.persist(t);
 				q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
 				q.setParameter("maVille", etapes_trajet[i]);
 				Ville v = (Ville) q.getSingleResult();
-				Etape e = new Etape(v, t);
+				Etape e = new Etape(v, Float.parseFloat(tarifs_etapes[i]));
 				em.persist(e);
 				etapes.add(e);
 			}
 		}
-		
-		Tarif tarifTrajet = new Tarif(Float.parseFloat(tarif_trajet));
-		em.persist(tarifTrajet);
 		
 		//get Ville Arrivée
 		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
 		q.setParameter("maVille", ville_arrivee);
 		Ville villeArrivee = (Ville) q.getSingleResult();
 		
-		Etape arrivee = new Etape(villeArrivee, tarifTrajet);
+		Etape arrivee = new Etape(villeArrivee, Float.parseFloat(tarif_trajet));
 		em.persist(arrivee);
 		etapes.add(arrivee);
 		//get infoUtilisateur conducteur
@@ -219,16 +218,14 @@ public class Facade {
 		return listVehicules;
 	}
 	
-	public void reserverTrajet(int idTrajet, int nbPlaces, String loginPassager, String arrivee, Float tarif) {
+	public void reserverTrajet(int idTrajet, int nbPlaces, String loginPassager, int idEtapeArrivee) {
 		//on récupère l'objet Trajet
-		System.out.println(arrivee);
+		System.out.println(idEtapeArrivee);
 		Trajet trajet = em.find(Trajet.class, idTrajet);
 		//on récupère les infos du passagers 
 		Login passagerLogin = em.find(Login.class, loginPassager);
-		Query q = em.createQuery("FROM Ville v WHERE v.ville = :arrivee");
-		q.setParameter("arrivee", arrivee);
-		Ville villeArrivee = (Ville) q.getSingleResult();
-		if(villeArrivee==null)
+		Etape etapeArrivee = em.find(Etape.class, idEtapeArrivee);
+		if(etapeArrivee==null)
 			System.out.println("probleme niveau arrivee");
 		if(passagerLogin==null)
 			System.out.println("probleme niveau login");
@@ -236,8 +233,14 @@ public class Facade {
 			System.out.println("probleme niveau infos passager");
 		if(trajet==null)
 			System.out.println("probleme niveau trajet");
-		Reservation maReservation = new Reservation(villeArrivee, trajet, nbPlaces, passagerLogin.getInfos(), "A confirmer", tarif);
+		Reservation maReservation = new Reservation(trajet, nbPlaces, passagerLogin.getInfos(), "A confirmer", etapeArrivee);
 		em.persist(maReservation);
+		
+		//modifier aussi le nombre de places restantes dans le trajet
+		Query q = em.createQuery("UPDATE Trajet t SET t.nombrePlacesRestantes = t.nombrePlacesRestantes - :nbReserves WHERE t.idTrajet = :idTrajet");
+		q.setParameter("nbReserves", nbPlaces);
+		q.setParameter("idTrajet", idTrajet);
+		q.executeUpdate();
 	}
 
 }

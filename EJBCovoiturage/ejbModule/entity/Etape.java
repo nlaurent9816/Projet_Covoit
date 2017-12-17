@@ -15,13 +15,13 @@ public class Etape {
 	@ManyToOne
 	private Ville ville;
 	
-	@OneToOne
-	private Tarif tarif;
+
+	private Float tarif;
 	
 	public Etape() {
 	}
 	
-	public Etape(Ville v, Tarif t) {
+	public Etape(Ville v, Float t) {
 		this.ville=v;
 		this.tarif=t;
 	}
@@ -42,11 +42,11 @@ public class Etape {
 		this.ville = ville;
 	}
 
-	public Tarif getTarif() {
+	public Float getTarif() {
 		return tarif;
 	}
 
-	public void setTarif(Tarif tarif) {
+	public void setTarif(Float tarif) {
 		this.tarif = tarif;
 	}
 	
