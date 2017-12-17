@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <title>Covoiturage</title>
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 
@@ -17,6 +17,7 @@
 <div style="height:500px; width:100%; background-color: #b3e6ff; display: table;">
 
 <div  align="center" style="display: table-cell; vertical-align: middle;">
+<!-- 
 <c:if test = "${not connecte}">
 <div id=connexion>
 	Connectez-vous :
@@ -33,9 +34,9 @@
 <c:if test = "${connecte}">
 Vous êtes connecté.
 </c:if>
-
+-->
 <h1 style="font-size: 60px; margin-bottom: 20px;">Covoiturage !</h1>
-<form id="recherche" method="post" class="simpleForm">
+<form id="recherche" method="post">
 	<div  style="font-size: 30px; display: table-cell; text-align: center;">
 
 	<span>De</span>
@@ -53,7 +54,7 @@ Vous êtes connecté.
 	</select>
 
 	</div>
-	<button type="submit" name="todo" value="recherche" style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
+	<button type="submit" name="todo" value="recherche" style="font-size: 20px; display: table-cell; text-align: center; margin: 15px; padding: 5px;">Rechercher !</button>
 </form>
 </div>
 </div>

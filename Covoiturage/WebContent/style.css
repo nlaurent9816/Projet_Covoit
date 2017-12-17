@@ -1,3 +1,5 @@
+
+
 .menu {
 
 	background-color:#494848;
@@ -39,9 +41,23 @@
 	background-color:#888a85;
 }
 
-.simpleForm{
-	background-color: #eff8f9;
+.loginRegister{
+	display: flex;
+	padding-left: 20%;
+	padding-right: 20%;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background-color: #b3e6ff;
+}
+
+.loginRegister form{
+	background-color: #e1f5ff;
 	padding: 32px;
+	padding-right:10%;
+	width:50%;
+	text-align: right;
+	border:ridge 6px;
+	border-color: #808080;
 }
 input{
 	border:2px;
@@ -51,7 +67,25 @@ input{
 
 }
 
+.searchForm{
+	background-color: #b3e6ff;
+	text-align: center;
+	border-bottom-left-radius: 12px; 
+	border-bottom-right-radius: 12px;
+	margin-bottom: 32px;
+}
 
+.results{
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	background-color: #e1f5ff;
+	padding: 15px;
+}
+
+.target{
+	border-bottom-style: dashed;
+	border-bottom-color: #babdb6;
+}
 
 .bottom{
 	padding: 10px; 

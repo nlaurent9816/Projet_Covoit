@@ -11,7 +11,7 @@
 <body>
 <%@include file="header.jsp" %>
 
-<form id="recherche" method="post" class="simpleForm">
+<form id="recherche" method="post" class="searchForm">
 	<span>De</span>
 	<select name="villeDepart" size="1" style=" padding:5px; font-size: inherit;">
 		<c:forEach items="${listeVilles}" var="v">
@@ -28,6 +28,10 @@
 	<button name="todo" value="recherche" style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
 </form>
 
+
+
+
+<div class="results">
 
 <c:forEach items="${listeTrajets}" var="t">
 		<div class="trajet">
@@ -63,7 +67,7 @@
 			
 		</div>
 </c:forEach>
-
+</div>
 <%@include file="footer.jsp" %>
 
 </body>
