@@ -13,8 +13,9 @@ public class TrajetDTO {
 	private String villeDepart;
 	private List<String> etapes;
 	private List<Float> tarifs;
+	private int idTrajet;
 	
-	public TrajetDTO(String conducteurNom, String conducteurPrenom, String dateDepart, String heureDepart, String gabaritVehicule, int nombrePlaces, String descriptionVehicule, String villeDepart, List<String> etapes, List<Float> tarifs) {
+	public TrajetDTO(String conducteurNom, String conducteurPrenom, String dateDepart, String heureDepart, String gabaritVehicule, int nombrePlaces, String descriptionVehicule, String villeDepart, List<String> etapes, List<Float> tarifs, int idTrajet) {
 		this.conducteurNom=conducteurNom;
 		this.conducteurPrenom=conducteurPrenom;
 		this.dateDepart=dateDepart;
@@ -25,6 +26,7 @@ public class TrajetDTO {
 		this.villeDepart=villeDepart;
 		this.etapes=etapes;
 		this.tarifs=tarifs;
+		this.setIdTrajet(idTrajet);
 		
 	}
 
@@ -88,6 +90,16 @@ public class TrajetDTO {
 	}
 	public void setTarifs(List<Float> tarifs) {
 		this.tarifs = tarifs;
+	}
+
+
+	public int getIdTrajet() {
+		return idTrajet;
+	}
+
+
+	public void setIdTrajet(int idTrajet) {
+		this.idTrajet = idTrajet;
 	}
 	
 	

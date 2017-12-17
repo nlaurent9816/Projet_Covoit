@@ -19,6 +19,7 @@ import dto.TrajetDTO;
 import entity.Etape;
 import entity.InfoUtilisateur;
 import entity.Login;
+import entity.Reservation;
 import entity.Tarif;
 import entity.Trajet;
 import entity.Vehicule;
@@ -77,7 +78,7 @@ public class Facade {
 				tarifs.add(e.getTarif().getValeur());
 				
 			}
-			TrajetDTO t_dto = new TrajetDTO(t.getConducteur().getNom(), t.getConducteur().getPrenom(), t.getDateDepart(), t.getHeureDepart(), t.getTypeVehicule().getGabaritVehicule(), t.getNombrePlaces(), t.getMonVehicule(), t.getVilleDepart().getVille(), etapeString, tarifs);
+			TrajetDTO t_dto = new TrajetDTO(t.getConducteur().getNom(), t.getConducteur().getPrenom(), t.getDateDepart(), t.getHeureDepart(), t.getTypeVehicule().getGabaritVehicule(), t.getNombrePlaces(), t.getMonVehicule(), t.getVilleDepart().getVille(), etapeString, tarifs, t.getIdTrajet());
 			trajetsRecherches.add(t_dto);
 		}
 		
@@ -187,6 +188,27 @@ public class Facade {
 			listVehicules.add(v.getGabaritVehicule());
 		}
 		return listVehicules;
+	}
+	
+	public void reserverTrajet(int idTrajet, int nbPlaces, String loginPassager, String arrivee) {
+		//on récupère l'objet Trajet
+		System.out.println(arrivee);
+		Trajet trajet = em.find(Trajet.class, idTrajet);
+		//on récupère les infos du passagers 
+		Login passagerLogin = em.find(Login.class, loginPassager);
+		Query q = em.createQuery("FROM Ville v WHERE v.ville = :arrivee");
+		q.setParameter("arrivee", arrivee);
+		Ville villeArrivee = (Ville) q.getSingleResult();
+		if(villeArrivee==null)
+			System.out.println("probleme niveau arrivee");
+		if(passagerLogin==null)
+			System.out.println("probleme niveau login");
+		if(passagerLogin.getInfos()==null)
+			System.out.println("probleme niveau infos passager");
+		if(trajet==null)
+			System.out.println("probleme niveau trajet");
+		Reservation maReservation = new Reservation(villeArrivee, trajet, nbPlaces, passagerLogin.getInfos(), "A confirmer");
+		em.persist(maReservation);
 	}
 
 }

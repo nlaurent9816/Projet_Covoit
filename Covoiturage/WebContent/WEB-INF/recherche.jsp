@@ -32,17 +32,33 @@
 		<div class="trajet">
 			<span>Départ le ${t.dateDepart} à ${t.heureDepart}</span><br/> <span> de ${t.villeDepart} vers</span>
 			<div>
-			<!--<c:forEach items="t.etapes" varStatus="loop">
-        		<span>${loop.index }</span><br/>
-     		 </c:forEach>-->
-     		 <ul>
-			<c:forEach items="${t.etapes}" var="etape" varStatus="loop">
-					<li> ${etape} pour ${t.tarifs[loop.index]} €</li>
-			</c:forEach>
-			</ul>
+			
+				<form id="Reservation" method="post">
+		     		<ul>
+						<c:forEach items="${t.etapes}" var="etape" varStatus="loop">
+								<li> ${etape} pour ${t.tarifs[loop.index]} €</li>
+								<input type="radio" name="arrivee" value="${etape}"/>
+						</c:forEach>
+					</ul>
+					<span>Conducteur : ${t.conducteurNom} ${t.conducteurPrenom}</span><br/>
+					<span>Voiture : ${t.gabaritVehicule} ${t.descriptionVehicule}</span><br/>
+					<span>Il reste ${t.nombrePlaces } places</span>
+					
+					
+					<c:if test = "${connecte}">
+						
+						<label>Nombre de places à réserver : </label> 
+						<select name="nbPlaces" size="1" style=" padding:5px; font-size: inherit;">
+							<c:forEach var="nb" begin="1" end="${ t.nombrePlaces}">
+								<option>${nb}</option>
+							</c:forEach>
+						</select>
+						<button type ="submit" name ="todo" value="reservation">Réserver</button>
+						<input name="idTrajet" type="hidden" value="${t.idTrajet}">
+					</c:if>
+				</form>
 			</div>
 			
-			<button type ="submit" name ="todo" value="infos">Plus d'informations</button>
 		</div>
 </c:forEach>
 

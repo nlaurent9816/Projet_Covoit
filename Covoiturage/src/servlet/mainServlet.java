@@ -90,9 +90,9 @@ public class mainServlet extends HttpServlet {
 		{
 				//on enregistre le nouveau trajet
 			System.out.println("Tentative d'enregistrement du trajet...");
-				facade.enregistrerTrajet(conducteur, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
+				this.facade.enregistrerTrajet(conducteur, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
 			System.out.println("Trajet enregistré");
-				goAccueil(request, response);
+				this.goAccueil(request, response);
 		}
 		else {
 			System.out.println("Il manque des informations");
@@ -123,14 +123,14 @@ public class mainServlet extends HttpServlet {
 		//que la connexion ait réussi ou non, on revient sur page index
 		//ajouter un message d'erreur si connexion non réussie
 		
-		goAccueil(request, response);
+		this.goAccueil(request, response);
 
 	}
     
     private void navigation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	switch (request.getParameter("Nav")) {
 		case "accueil":
-			goAccueil(request, response);
+			this.goAccueil(request, response);
 			break;
 		case "register":
 			request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
@@ -165,11 +165,11 @@ public class mainServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Récupération de la session ou création de la session+ajout de la facade personnalisée
-		facade=(Facade) request.getSession().getAttribute("facade");
+		this.facade=(Facade) request.getSession().getAttribute("facade");
 		if(facade==null){
 			try{
 				Context ctx=new InitialContext();
-				facade=(Facade) ctx.lookup("java:app/Covoiturage/Facade");
+				this.facade=(Facade) ctx.lookup("java:app/Covoiturage/Facade");
 				request.getSession().setAttribute("facade", facade);
 			}
 			catch (NamingException e) {
@@ -193,12 +193,12 @@ public class mainServlet extends HttpServlet {
 		
 		//si clic sur barre de navigation
 		if(request.getParameter("Nav")!=null) {//on a cliqué sur la barre de navigation
-			navigation(request, response);
+			this.navigation(request, response);
 		}
 		else {//autre action que la barre de navigation
 			//si pas sur un clic de bouton, on revient page d'accueil
 			if(todo==null) {
-				goAccueil(request, response);
+				this.goAccueil(request, response);
 			}
 			else {
 				switch(todo) {
@@ -212,8 +212,11 @@ public class mainServlet extends HttpServlet {
 					System.out.println("Hello ?");
 					this.rechercheTrajet(request, response);
 					break;
+				case "reservation":
+					this.reserverTrajet(request, response, currentLogin);
+					break;
 				default:
-					goAccueil(request, response);
+					this.goAccueil(request, response);
 					break;
 				
 				}
@@ -221,6 +224,20 @@ public class mainServlet extends HttpServlet {
 		}
 	}
 
+	private void reserverTrajet(HttpServletRequest request, HttpServletResponse response, String currentLogin) throws ServletException, IOException {
+		int idTrajet = Integer.parseInt(request.getParameter("idTrajet"));
+		int nbPlaces = Integer.parseInt(request.getParameter("nbPlaces"));
+		String arrivee = request.getParameter("arrivee");
+		System.out.println("Jai réservé le trajet N° "+idTrajet+" pour destination de "+arrivee+" avec " + nbPlaces + " passagers et je suis "+currentLogin+" !");
+
+		if(arrivee!=null) {
+			facade.reserverTrajet(idTrajet, nbPlaces,currentLogin, arrivee);
+		}
+		else {
+			System.out.println("Vous n'avez pas choisi d'étapes d'arrivée !");
+		}
+		this.goAccueil(request, response);
+	}
 	
 	private void rechercheTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
