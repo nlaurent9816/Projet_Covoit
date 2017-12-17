@@ -42,6 +42,11 @@
 .simpleForm{
 	background-color: #eff8f9;
 	padding: 32px;
+	padding-right:15%;
+	width:50%;
+	text-align: right;
+	border:solid;
+	border-color: #808080;
 }
 input{
 	border:2px;
