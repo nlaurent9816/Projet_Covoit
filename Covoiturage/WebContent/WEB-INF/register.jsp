@@ -11,14 +11,15 @@
 <body>
 
 <%@include file="header.jsp" %>
-<div style="display: flex;">
-<form id="register" method="post" class="simpleForm">
-	<p style="text-align: center;font-size: larger;">Créer un nouveau compte</p>
+<div class="loginRegister">
+<form id="register" method="post" class="loginForm">
+	<p style="text-align: center;font-size: larger;" > <b>Créer un nouveau compte </b></p>
+	<c:if test="${failRegister}"><p style="font-size: larger;color: red;">${reason}</p></c:if>
 	<label>Login : </label><input type ="text" name ="login"/>
 	<br/>
 	<label>Mot de Passe : </label><input type ="password" name ="mdp"/>
 	<br/>
-	<label>Entrez de nouveau votre mot de passe : </label><input type ="password" name ="mdpbis"/>
+	<label>Réentrez votre mot de passe : </label><input type ="password" name ="mdpbis"/>
 	<br/>
 	<label>Nom : </label><input type ="text" name ="nom"/>
 	<br/>
@@ -36,11 +37,12 @@
 	<button type = "submit" name ="todo" value="register">S'enregistrer</button>
 </form>
 
-<form method="post" class="simpleForm">
-	<p style="text-align: center;font-size: larger;">Se connecter</p>
+<form method="post" class="loginForm">
+	<p style="text-align: center;font-size: larger;"> <b>Se connecter </b></p>
+	<c:if test="${failConnect}"><p style="font-size: larger;color: red;">Echec de connexion</p></c:if>
 	Login :<input type ="text" name ="login"/>
 	<br/>
-	MDP : <input type ="password" name ="mdp"/>
+	Mot de passe : <input type ="password" name ="mdp"/>
 	<br/>
 	<button type = "submit" name ="todo" value="connect">Connexion</button>
 </form>

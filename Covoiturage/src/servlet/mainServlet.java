@@ -53,12 +53,14 @@ public class mainServlet extends HttpServlet {
 				goAccueil(request, response);
 			}
 			else {
-				System.out.println("Il manque des informations");
+				request.setAttribute("failRegister", "true");
+				request.setAttribute("reason", "Il manque des informations");
 				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 			}
 		}
 		else {
-			System.out.println("Les mots de passe ne sont pas identiques");
+			request.setAttribute("failRegister", "true");
+			request.setAttribute("reason","Les mots de passe ne sont pas identiques");
 			request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 		}	
 		
@@ -116,6 +118,8 @@ public class mainServlet extends HttpServlet {
 			}
 			else {
 				System.out.println("Connexion échouée");
+				request.setAttribute("failConnect", "true");
+				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 			}
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
