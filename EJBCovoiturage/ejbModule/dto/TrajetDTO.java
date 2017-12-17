@@ -27,7 +27,6 @@ public class TrajetDTO {
 		this.etapes=etapes;
 		this.tarifs=tarifs;
 		this.setIdTrajet(idTrajet);
-		
 	}
 
 	

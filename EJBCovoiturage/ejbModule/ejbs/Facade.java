@@ -35,6 +35,24 @@ public class Facade {
 	@PersistenceContext(unitName="monUnite")
 	EntityManager em;
 	
+	public List<TrajetDTO> getTrajetConducteur(String loginConducteur){
+		Query q = em.createQuery("SELECT t FROM Trajet t, InfoUtilisateur info, Login l WHERE l.login=:loginConducteur AND  l.infos=info AND t.conducteur=info");
+		q.setParameter("loginConducteur", loginConducteur);
+		List<Trajet> mesTrajetsTemp = (List<Trajet>) q.getResultList();
+		List<TrajetDTO> mesTrajets = new ArrayList<TrajetDTO>();
+		for( Trajet t : mesTrajetsTemp) {
+			mesTrajets.add(trajetToTrajetDTO(t));
+		}
+		return mesTrajets;
+	}
+	
+	public List<Reservation> getReservations(String currentLogin){
+		Query q = em.createQuery("SELECT r FROM Reservation r, InfoUtilisateur info, Login l WHERE l.login=:loginConducteur AND  l.infos=info AND info=r.passager");
+		q.setParameter("loginConducteur", currentLogin);
+		List<Reservation> mesReservationsTemp = (List<Reservation>) q.getResultList();
+		System.out.println("Nombre de reserv retournées : " + mesReservationsTemp.size());
+		return mesReservationsTemp;
+	}
 	public List<TrajetDTO> getTrajets(String ville_depart, String ville_arrivee){
 		//get Ville départ
 		Query q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
@@ -70,19 +88,30 @@ public class Facade {
 		
 		//on remplit notre liste de trajet DTO que l'on va renvoyer
 		for (Trajet t : trajetsRecherchesTemp) {
-			List<Float> tarifs =new ArrayList<Float>();
-			List<String> etapeString = new ArrayList<String>();
-			List<Etape> etapes = t.getLesEtapes();
-			for (Etape e : etapes) {
-				etapeString.add(e.getVille().getVille());
-				tarifs.add(e.getTarif().getValeur());
-				
-			}
-			TrajetDTO t_dto = new TrajetDTO(t.getConducteur().getNom(), t.getConducteur().getPrenom(), t.getDateDepart(), t.getHeureDepart(), t.getTypeVehicule().getGabaritVehicule(), t.getNombrePlaces(), t.getMonVehicule(), t.getVilleDepart().getVille(), etapeString, tarifs, t.getIdTrajet());
-			trajetsRecherches.add(t_dto);
+			trajetsRecherches.add(trajetToTrajetDTO(t));
 		}
 		
 		return trajetsRecherches;
+	}
+	
+	public TrajetDTO trajetToTrajetDTO(Trajet t) {
+		List<Float> tarifs =new ArrayList<Float>();
+		List<String> etapeString = new ArrayList<String>();
+		List<Etape> etapes = t.getLesEtapes();
+		for (Etape e : etapes) {
+			etapeString.add(e.getVille().getVille());
+			tarifs.add(e.getTarif().getValeur());
+			
+		}
+		int nombrePlacesRestantes=t.getNombrePlaces();
+		Query q=em.createQuery("FROM Reservation r WHERE leTrajet=:trajetActuel");
+		q.setParameter("trajetActuel", t);
+		List<Reservation> reservations = q.getResultList();
+		for (Reservation r : reservations) {
+			nombrePlacesRestantes=nombrePlacesRestantes-r.getNombrePlace();
+		}
+		TrajetDTO t_dto = new TrajetDTO(t.getConducteur().getNom(), t.getConducteur().getPrenom(), t.getDateDepart(), t.getHeureDepart(), t.getTypeVehicule().getGabaritVehicule(), nombrePlacesRestantes, t.getMonVehicule(), t.getVilleDepart().getVille(), etapeString, tarifs, t.getIdTrajet());
+		return t_dto;
 	}
 	
 	public void enregistrerTrajet(String conducteur, String vehicule_desc, String vehicule_gabarit, String date_trajet, String heure_trajet, String ville_depart, String ville_arrivee, String tarif_trajet, String[] etapes_trajet, String[] tarifs_etapes, String place_trajet) {
@@ -182,7 +211,7 @@ public class Facade {
 	
 	public List<String> getNameVehicule(){
 		Query q = em.createQuery("From Vehicule");
-		List<Vehicule> listObject = q.getResultList();
+		List<Vehicule> listObject = (List<Vehicule>) q.getResultList();
 		List<String> listVehicules = new ArrayList<String>();
 		for (Vehicule v : listObject) {
 			listVehicules.add(v.getGabaritVehicule());
@@ -190,7 +219,7 @@ public class Facade {
 		return listVehicules;
 	}
 	
-	public void reserverTrajet(int idTrajet, int nbPlaces, String loginPassager, String arrivee) {
+	public void reserverTrajet(int idTrajet, int nbPlaces, String loginPassager, String arrivee, Float tarif) {
 		//on récupère l'objet Trajet
 		System.out.println(arrivee);
 		Trajet trajet = em.find(Trajet.class, idTrajet);
@@ -207,7 +236,7 @@ public class Facade {
 			System.out.println("probleme niveau infos passager");
 		if(trajet==null)
 			System.out.println("probleme niveau trajet");
-		Reservation maReservation = new Reservation(villeArrivee, trajet, nbPlaces, passagerLogin.getInfos(), "A confirmer");
+		Reservation maReservation = new Reservation(villeArrivee, trajet, nbPlaces, passagerLogin.getInfos(), "A confirmer", tarif);
 		em.persist(maReservation);
 	}
 

@@ -24,16 +24,19 @@ public class Reservation {
 	
 	private String statut; //approuvé, non approuvé, en attente
 
+	private Float tarif;
+
 	public Reservation() {
 		
 	}
 	
-	public Reservation(Ville arrivee, Trajet trajet, int nbPlaces, InfoUtilisateur passager, String statut) {
+	public Reservation(Ville arrivee, Trajet trajet, int nbPlaces, InfoUtilisateur passager, String statut, Float tarif) {
 		this.arrivee=arrivee;
 		this.leTrajet=trajet;
 		this.nombrePlace=nbPlaces;
 		this.passager=passager;
 		this.statut=statut;
+		this.tarif=tarif;
 	}
 	
 	public int getIdReservation() {
@@ -82,6 +85,14 @@ public class Reservation {
 
 	public void setStatut(String statut) {
 		this.statut = statut;
+	}
+	
+	public Float getTarif() {
+		return tarif;
+	}
+
+	public void setTarif(Float tarif) {
+		this.tarif = tarif;
 	}
 	
 	

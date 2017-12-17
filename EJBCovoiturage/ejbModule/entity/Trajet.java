@@ -29,7 +29,7 @@ public class Trajet {
 	private String monVehicule;
 	
 	private String dateDepart; //garder ce type et faire une méthode pour parser chaine ou autre type plus convenable ?
-	
+
 	private String heureDepart;//idem que date
 
 	@ManyToOne
@@ -132,6 +132,22 @@ public class Trajet {
 
 	public void setNombrePlaces(int nombrePlaces) {
 		this.nombrePlaces = nombrePlaces;
+	}
+	
+	public List<Reservation> getPassagers() {
+		return passagers;
+	}
+
+	public void setPassagers(List<Reservation> passagers) {
+		this.passagers = passagers;
+	}
+
+	public Vehicule getGabaritVehicule() {
+		return gabaritVehicule;
+	}
+
+	public void setGabaritVehicule(Vehicule gabaritVehicule) {
+		this.gabaritVehicule = gabaritVehicule;
 	}
 
 

@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Rechercher un trajet</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
@@ -28,6 +27,8 @@
 	
 	<button name="todo" value="recherche" style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
 </form>
+
+
 <c:forEach items="${listeTrajets}" var="t">
 		<div class="trajet">
 			<span>Départ le ${t.dateDepart} à ${t.heureDepart}</span><br/> <span> de ${t.villeDepart} vers</span>
@@ -38,6 +39,7 @@
 						<c:forEach items="${t.etapes}" var="etape" varStatus="loop">
 								<li> ${etape} pour ${t.tarifs[loop.index]} €</li>
 								<input type="radio" name="arrivee" value="${etape}"/>
+								<input type="hidden" name="tarif" value="${t.tarifs[loop.index]}"/><!--  probleme ici : on récupère que le premier élément dans la servlet -->
 						</c:forEach>
 					</ul>
 					<span>Conducteur : ${t.conducteurNom} ${t.conducteurPrenom}</span><br/>
