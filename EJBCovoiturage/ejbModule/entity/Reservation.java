@@ -24,6 +24,18 @@ public class Reservation {
 	
 	private String statut; //approuvé, non approuvé, en attente
 
+	public Reservation() {
+		
+	}
+	
+	public Reservation(Ville arrivee, Trajet trajet, int nbPlaces, InfoUtilisateur passager, String statut) {
+		this.arrivee=arrivee;
+		this.leTrajet=trajet;
+		this.nombrePlace=nbPlaces;
+		this.passager=passager;
+		this.statut=statut;
+	}
+	
 	public int getIdReservation() {
 		return idReservation;
 	}

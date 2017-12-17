@@ -25,6 +25,12 @@ public class mainServlet extends HttpServlet {
 	private Facade facade; 
 	
 	private static final long serialVersionUID = 1L;
+	
+	private void goAccueil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("listeVilles", facade.getNameVille());
+		request.setAttribute("listeVehicules", facade.getNameVehicule());
+		request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+	}
     
     private void registerUtilisateur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String password = (String) request.getParameter("mdp");
@@ -36,14 +42,15 @@ public class mainServlet extends HttpServlet {
 			String tel = (String) request.getParameter("tel");
 			String email = (String) request.getParameter("email");
 			String login = (String) request.getParameter("login");
-			if(nom!=null && prenom!=null && sexe!=null && tel!=null && email!=null && login!=null) {
+			if(!nom.equals("") && !prenom.equals("") && sexe!=null && !tel.equals("") && !email.equals("") && !login.equals("")) {
 				//on enregistre le nouvel utilisateur
 				try {
 					facade.enregistrerUtilisateur(nom, prenom, sexe, tel, email, login, password);
 				} catch (NoSuchAlgorithmException e) {
 					e.printStackTrace();
 				}
-				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				
+				goAccueil(request, response);
 			}
 			else {
 				System.out.println("Il manque des informations");
@@ -54,6 +61,46 @@ public class mainServlet extends HttpServlet {
 			System.out.println("Les mots de passe ne sont pas identiques");
 			request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 		}	
+		
+
+	}
+    
+    private void registerTrajet(HttpServletRequest request, HttpServletResponse response, String conducteur) throws ServletException, IOException {
+    	String vehicule_desc = (String) request.getParameter("vehiculeDesc");
+		String vehicule_gabarit = (String) request.getParameter("vehiculeGabarit");
+		String date_trajet = (String) request.getParameter("dateTrajet");
+		String heure_trajet = (String) request.getParameter("heureTrajet");
+		String minute_trajet=(String) request.getParameter("minuteTrajet");
+		heure_trajet=heure_trajet+" h "+minute_trajet;
+		String ville_depart = (String) request.getParameter("villeDepart");
+		String ville_arrivee = (String) request.getParameter("villeArrivee");
+		String tarif_trajet = (String) request.getParameter("tarifTrajet");
+		String[] etapes_trajet = (String[]) request.getParameterValues("etapeTrajet");
+		String[] tarifs_etapes = (String[]) request.getParameterValues("tarifEtape");
+		String place_trajet = (String) request.getParameter("placeTrajet");
+		if(vehicule_desc==null) {
+			System.out.println("Say Hello !");
+		}
+		System.out.println(vehicule_desc+ " "+vehicule_gabarit+" "+date_trajet+" "+heure_trajet+" "+ville_depart+" "+ville_arrivee+" "+tarif_trajet+" "+place_trajet);
+		for(int i =0; i<etapes_trajet.length;i++) {
+			System.out.println(etapes_trajet[i]+" "+tarifs_etapes[i]);
+		}
+		
+		if(!(conducteur.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals("")) && (tarifs_etapes.length==etapes_trajet.length)) 
+		{
+				//on enregistre le nouveau trajet
+			System.out.println("Tentative d'enregistrement du trajet...");
+				this.facade.enregistrerTrajet(conducteur, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
+			System.out.println("Trajet enregistré");
+				this.goAccueil(request, response);
+		}
+		else {
+			System.out.println("Il manque des informations");
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
+		}
+			
 		
 
 	}
@@ -71,20 +118,19 @@ public class mainServlet extends HttpServlet {
 				System.out.println("Connexion échouée");
 			}
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//que la connexion ait réussi ou non, on revient sur page index
 		//ajouter un message d'erreur si connexion non réussie
 		
-		request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+		this.goAccueil(request, response);
 
 	}
     
     private void navigation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	switch (request.getParameter("Nav")) {
 		case "accueil":
-			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			this.goAccueil(request, response);
 			break;
 		case "register":
 			request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
@@ -93,10 +139,18 @@ public class mainServlet extends HttpServlet {
 			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
 			break;
 		case "recherche":
-			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
 			break;
 		case "ajout":
 			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			break;
+		case "ajoutTrajet":
+			//faire passer la liste des villes et des véhicules
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
 			break;
 		default:
 			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
@@ -111,11 +165,11 @@ public class mainServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Récupération de la session ou création de la session+ajout de la facade personnalisée
-		facade=(Facade) request.getSession().getAttribute("facade");
+		this.facade=(Facade) request.getSession().getAttribute("facade");
 		if(facade==null){
 			try{
 				Context ctx=new InitialContext();
-				facade=(Facade) ctx.lookup("java:app/Covoiturage/Facade");
+				this.facade=(Facade) ctx.lookup("java:app/Covoiturage/Facade");
 				request.getSession().setAttribute("facade", facade);
 			}
 			catch (NamingException e) {
@@ -139,20 +193,30 @@ public class mainServlet extends HttpServlet {
 		
 		//si clic sur barre de navigation
 		if(request.getParameter("Nav")!=null) {//on a cliqué sur la barre de navigation
-			navigation(request, response);
+			this.navigation(request, response);
 		}
 		else {//autre action que la barre de navigation
 			//si pas sur un clic de bouton, on revient page d'accueil
 			if(todo==null) {
-				request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+				this.goAccueil(request, response);
 			}
 			else {
 				switch(todo) {
 				case "register" :
 					this.registerUtilisateur(request, response);
 					break;
+				case "newTrajet" :
+					this.registerTrajet(request, response, currentLogin);
+					break;
+				case "recherche" :
+					System.out.println("Hello ?");
+					this.rechercheTrajet(request, response);
+					break;
+				case "reservation":
+					this.reserverTrajet(request, response, currentLogin);
+					break;
 				default:
-					request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+					this.goAccueil(request, response);
 					break;
 				
 				}
@@ -160,8 +224,31 @@ public class mainServlet extends HttpServlet {
 		}
 	}
 
+	private void reserverTrajet(HttpServletRequest request, HttpServletResponse response, String currentLogin) throws ServletException, IOException {
+		int idTrajet = Integer.parseInt(request.getParameter("idTrajet"));
+		int nbPlaces = Integer.parseInt(request.getParameter("nbPlaces"));
+		String arrivee = request.getParameter("arrivee");
+		System.out.println("Jai réservé le trajet N° "+idTrajet+" pour destination de "+arrivee+" avec " + nbPlaces + " passagers et je suis "+currentLogin+" !");
+
+		if(arrivee!=null) {
+			facade.reserverTrajet(idTrajet, nbPlaces,currentLogin, arrivee);
+		}
+		else {
+			System.out.println("Vous n'avez pas choisi d'étapes d'arrivée !");
+		}
+		this.goAccueil(request, response);
+	}
 	
-	
+	private void rechercheTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String villeDep = (String) request.getParameter("villeDepart");
+		String villeArr = (String) request.getParameter("villeArrivee");
+		
+		request.setAttribute("listeTrajets", facade.getTrajets(villeDep, villeArr));
+		request.setAttribute("listeVilles", facade.getNameVille());
+		request.setAttribute("listeVehicules", facade.getNameVehicule());
+		request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
