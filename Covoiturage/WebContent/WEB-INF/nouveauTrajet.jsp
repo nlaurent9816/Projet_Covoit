@@ -11,8 +11,9 @@
 </head>
 <body>
 <%@include file="header.jsp" %>
-
+<div style="background-color: #b3e6ff;padding: 1px;">
 <form id="newTrajet" method="post" class="simpleForm">
+	<h1>Proposer un trajet</h1>
 	<c:if test="${failTrajet}"><p style="font-size: larger;color: red;">${reason}</p></c:if>
 	<label>Votre véhicule : </label><input type ="text" name ="vehiculeDesc"/>
 	<label>Gabarit :</label><select name="vehiculeGabarit" size="1">
@@ -39,16 +40,16 @@
 	
 	<ul id="lesEtapes">
 	</ul>
-	<a href="#" onclick="ajout_etape()">Ajouter une étape</a>
+	<button type="button" onclick="ajout_etape()">Ajouter une étape</button>
 	<br/>
 	
 	<!-- Ajouter les étapes ici -->
 	<label>Nombre de places :</label><input type="text" name="placeTrajet"/>
 	<br/>
 	
-	<button type = "submit" name ="todo" value="newTrajet">S'enregistrer</button>
+	<button type = "submit" name ="todo" value="newTrajet">Valider</button>
 </form>
-	
+</div>
 <%@include file="footer.jsp" %>
 
 <script type="text/javascript">
@@ -58,7 +59,7 @@ function ajout_etape(){
 	var nb_etapes = tab_etapes.length;
 	var num_new_etape = nb_etapes+1;
 	var contenu_ma_liste = ma_liste.innerHTML;
-	var li_a_ajouter= ' <li class="etape"><label>Ville étape d\'arrivée :</label><select name="etapeTrajet" size="1"><c:forEach items="${listeVilles}" var="v"><option>${v}</option></c:forEach></select> <label>Tarif :</label><input type="text" name="tarifEtape"/><span> €</span><a href="#" onclick="supprime_etape(this)">X</a></li>';
+	var li_a_ajouter= ' <li class="etape"><label>Ville étape d\'arrivée :</label><select name="etapeTrajet" size="1"><c:forEach items="${listeVilles}" var="v"><option>${v}</option></c:forEach></select> <label>Tarif :</label><input type="text" name="tarifEtape"/><span> €</span><button type="button" onclick="supprime_etape(this)">X</button></li>';
 	contenu_ma_liste = contenu_ma_liste + li_a_ajouter;
 	ma_liste.innerHTML = contenu_ma_liste;
 }

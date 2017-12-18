@@ -12,6 +12,7 @@
 <%@include file="header.jsp" %>
 
 <form id="recherche" method="post" class="searchForm">
+	<h2>Trouver un trajet</h2>
 	<span>De</span>
 	<select name="villeDepart" size="1" style=" padding:5px; font-size: inherit;">
 		<c:forEach items="${listeVilles}" var="v">
@@ -38,34 +39,36 @@
 
 <c:forEach items="${listeTrajets}" var="t">
 		<div class="trajet">
-			<span>Départ le ${t.dateDepart} à ${t.heureDepart}</span><br/> <span> de ${t.villeDepart.ville} vers</span>
-			<div>
+			<span class="title">Départ le&nbsp;
+			<b> ${t.dateDepart} </b>&nbsp;à&nbsp;
+			<b> ${t.heureDepart} </b>&nbsp;de&nbsp;
+			<b> ${t.villeDepart.ville} </b>&nbsp;vers :</span>
 			
-				<form id="Reservation" method="post">
-		     		<ul>
-						<c:forEach items="${t.lesEtapes}" var="etape" varStatus="loop">
-								<li> ${etape.ville.ville} pour ${etape.tarif} €</li>
-								<c:if test = "${connecte == 'true'}"><input type="radio" name="arrivee" value="${etape.id}"/></c:if>
+			<form id="Reservation" method="post">
+	     		<ul>
+					<c:forEach items="${t.lesEtapes}" var="etape" varStatus="loop">
+							<li> ${etape.ville.ville} pour ${etape.tarif} €
+							<c:if test = "${connecte == 'true'}"><input type="radio" name="arrivee" value="${etape.id}"/></c:if>
+							</li>
+					</c:forEach>
+				</ul>
+				<span class="info">Conducteur : ${t.conducteur.nom} ${t.conducteur.prenom}<br/>
+				Voiture : ${t.gabaritVehicule.gabaritVehicule} ${t.monVehicule}<br/>
+				Il reste ${t.nombrePlacesRestantes } places</span><br>
+				
+				
+				<c:if test = "${connecte == 'true'}">
+					
+					<label>Nombre de places à réserver : </label> 
+					<select name="nbPlaces" size="1" style=" padding:5px; font-size: inherit;">
+						<c:forEach var="nb" begin="1" end="${ t.nombrePlacesRestantes}">
+							<option>${nb}</option>
 						</c:forEach>
-					</ul>
-					<span>Conducteur : ${t.conducteur.nom} ${t.conducteur.prenom}</span><br/>
-					<span>Voiture : ${t.gabaritVehicule.gabaritVehicule} ${t.monVehicule}</span><br/>
-					<span>Il reste ${t.nombrePlacesRestantes } places</span>
-					
-					
-					<c:if test = "${connecte == 'true'}">
-						
-						<label>Nombre de places à réserver : </label> 
-						<select name="nbPlaces" size="1" style=" padding:5px; font-size: inherit;">
-							<c:forEach var="nb" begin="1" end="${ t.nombrePlacesRestantes}">
-								<option>${nb}</option>
-							</c:forEach>
-						</select>
-						<button type ="submit" name ="todo" value="reservation">Réserver</button>
-						<input name="idTrajet" type="hidden" value="${t.idTrajet}">
-					</c:if>
+					</select>
+					<button type ="submit" name ="todo" value="reservation">Réserver</button>
+					<input name="idTrajet" type="hidden" value="${t.idTrajet}">
+				</c:if>
 				</form>
-			</div>
 			
 		</div>
 </c:forEach>
