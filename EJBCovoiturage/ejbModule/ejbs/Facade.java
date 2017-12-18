@@ -150,17 +150,18 @@ public class Facade {
 		
 		List<Etape> etapes = new ArrayList<Etape>();
 		Query q;
-		if(tarifs_etapes.length>0) {
-			for(int i =0;i<tarifs_etapes.length;i++) {
-				q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
-				q.setParameter("maVille", etapes_trajet[i]);
-				Ville v = (Ville) q.getSingleResult();
-				Etape e = new Etape(v, Float.parseFloat(tarifs_etapes[i]));
-				em.persist(e);
-				etapes.add(e);
+		if(tarifs_etapes!=null) {
+			if(tarifs_etapes.length>0) {
+				for(int i =0;i<tarifs_etapes.length;i++) {
+					q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+					q.setParameter("maVille", etapes_trajet[i]);
+					Ville v = (Ville) q.getSingleResult();
+					Etape e = new Etape(v, Float.parseFloat(tarifs_etapes[i]));
+					em.persist(e);
+					etapes.add(e);
+				}
 			}
 		}
-		
 		//get Ville Arrivée
 		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
 		q.setParameter("maVille", ville_arrivee);
@@ -225,7 +226,7 @@ public class Facade {
 	}
 	
 	public List<String> getNameVille(){
-		Query q = em.createQuery("From Ville");
+		Query q = em.createQuery("From Ville v ORDER BY v.ville");
 		List<Ville> listObject = q.getResultList();
 		List<String> listVilles = new ArrayList<String>();
 		for (Ville v : listObject) {
@@ -235,7 +236,7 @@ public class Facade {
 	}
 	
 	public List<String> getNameVehicule(){
-		Query q = em.createQuery("From Vehicule");
+		Query q = em.createQuery("From Vehicule v ORDER BY v.gabaritVehicule");
 		List<Vehicule> listObject = (List<Vehicule>) q.getResultList();
 		List<String> listVehicules = new ArrayList<String>();
 		for (Vehicule v : listObject) {
@@ -275,5 +276,19 @@ public class Facade {
 		q.executeUpdate();
 		
 	}
-
+	
+	public boolean isAdmin(String currentLogin) {
+		Login user = em.find(Login.class, currentLogin);
+		return (user.getRole()==0);
+	}
+	
+	public void ajoutVille(String ville){
+		Ville maVille = new Ville(ville);
+		em.persist(maVille);
+	}
+	
+	public void ajoutVehicule(String vehicule){
+		Vehicule monVehicule = new Vehicule(vehicule);
+		em.persist(monVehicule);
+	}
 }

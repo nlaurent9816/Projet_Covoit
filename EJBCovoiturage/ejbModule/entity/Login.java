@@ -14,11 +14,14 @@ public class Login {
 	
 	@OneToOne
 	private InfoUtilisateur infos;//A un login, il y a un utilisateur (MD)
+	
+	private int role; //0 admin, 1 lambda
 
 	public Login(String newLogin, String newPassword, InfoUtilisateur newIu) {
 		this.login=newLogin;
 		this.password=newPassword;
 		this.infos=newIu;
+		this.role=1;
 	}
 	
 	public Login() {
@@ -48,6 +51,13 @@ public class Login {
 		this.infos = infos;
 	}
 	
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
 
 
 }

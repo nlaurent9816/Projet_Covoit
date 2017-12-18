@@ -92,7 +92,7 @@ public class mainServlet extends HttpServlet {
 		String[] tarifs_etapes = (String[]) request.getParameterValues("tarifEtape");
 		String place_trajet = (String) request.getParameter("placeTrajet");
 		
-		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals("")) && (tarifs_etapes.length==etapes_trajet.length)) 
+		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals(""))) 
 		{
 				//on enregistre le nouveau trajet
 				this.facade.enregistrerTrajet(this.currentLogin, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
@@ -117,6 +117,12 @@ public class mainServlet extends HttpServlet {
 			if(facade.checkUtilisateur(login, password)) {
 				request.getSession().setAttribute("login", login);
 				request.setAttribute("connecte", "true");
+				if (this.facade.isAdmin(login)) {
+					request.setAttribute("role", "admin");
+				}
+				else {
+					request.setAttribute("role", "utilisateur");
+				}
 			}
 			else {
 				request.setAttribute("failConnect", "true");
@@ -147,11 +153,13 @@ public class mainServlet extends HttpServlet {
 			break;
 		case "recherche":
 			request.setAttribute("listeVilles", facade.getNameVille());
-			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			//request.setAttribute("listeVehicules", facade.getNameVehicule());
 			request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
 			break;
 		case "ajout":
-			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
 			break;
 		case "ajoutTrajet":
 			//faire passer la liste des villes et des véhicules
@@ -203,6 +211,12 @@ public class mainServlet extends HttpServlet {
 		}
 		else {
 			request.setAttribute("connecte", "true");
+			if (this.facade.isAdmin(currentLogin)) {
+				request.setAttribute("role", "admin");
+			}
+			else {
+				request.setAttribute("role", "utilisateur");
+			}
 		}
 		
 		//si clic sur barre de navigation
@@ -256,6 +270,18 @@ public class mainServlet extends HttpServlet {
 					request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
 					request.setAttribute("listeReservations", facade.getReservations(currentLogin));
 					request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
+					break;
+				case "ajouterVille" :
+					this.facade.ajoutVille(request.getParameter("ajoutVille"));
+					request.setAttribute("listeVilles", facade.getNameVille());
+					request.setAttribute("listeVehicules", facade.getNameVehicule());
+					request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
+					break;
+				case "ajouterVehicule" :
+					this.facade.ajoutVehicule(request.getParameter("ajoutVehicule"));
+					request.setAttribute("listeVilles", facade.getNameVille());
+					request.setAttribute("listeVehicules", facade.getNameVehicule());
+					request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
 					break;
 				default:
 					this.goAccueil(request, response);
