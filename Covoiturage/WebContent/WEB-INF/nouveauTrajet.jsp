@@ -13,6 +13,7 @@
 <%@include file="header.jsp" %>
 
 <form id="newTrajet" method="post" class="simpleForm">
+	<c:if test="${failTrajet}"><p style="font-size: larger;color: red;">${reason}</p></c:if>
 	<label>Votre véhicule : </label><input type ="text" name ="vehiculeDesc"/>
 	<label>Gabarit :</label><select name="vehiculeGabarit" size="1">
 	<c:forEach items="${listeVehicules}" var="v">

@@ -91,24 +91,16 @@ public class mainServlet extends HttpServlet {
 		String[] etapes_trajet = (String[]) request.getParameterValues("etapeTrajet");
 		String[] tarifs_etapes = (String[]) request.getParameterValues("tarifEtape");
 		String place_trajet = (String) request.getParameter("placeTrajet");
-		if(vehicule_desc==null) {
-			System.out.println("Say Hello !");
-		}
-		System.out.println(vehicule_desc+ " "+vehicule_gabarit+" "+date_trajet+" "+heure_trajet+" "+ville_depart+" "+ville_arrivee+" "+tarif_trajet+" "+place_trajet);
-		for(int i =0; i<etapes_trajet.length;i++) {
-			System.out.println(etapes_trajet[i]+" "+tarifs_etapes[i]);
-		}
 		
 		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals("")) && (tarifs_etapes.length==etapes_trajet.length)) 
 		{
 				//on enregistre le nouveau trajet
-			System.out.println("Tentative d'enregistrement du trajet...");
 				this.facade.enregistrerTrajet(this.currentLogin, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
-			System.out.println("Trajet enregistré");
 				this.goAccueil(request, response);
 		}
 		else {
-			System.out.println("Il manque des informations");
+			request.setAttribute("failTrajet", "true");
+			request.setAttribute("reason", "Il manque des informations");
 			request.setAttribute("listeVilles", facade.getNameVille());
 			request.setAttribute("listeVehicules", facade.getNameVehicule());
 			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
@@ -125,10 +117,8 @@ public class mainServlet extends HttpServlet {
 			if(facade.checkUtilisateur(login, password)) {
 				request.getSession().setAttribute("login", login);
 				request.setAttribute("connecte", "true");
-				System.out.println("Connexion réussie");
 			}
 			else {
-				System.out.println("Connexion échouée");
 				request.setAttribute("failConnect", "true");
 				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 			}
@@ -169,8 +159,15 @@ public class mainServlet extends HttpServlet {
 			request.setAttribute("listeVehicules", facade.getNameVehicule());
 			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
 			break;
+		case "deconnexion":
+			request.setAttribute("connecte", "false");
+			request.getSession().setAttribute("login", null);
+			request.getSession().setAttribute("facade", null);
+			System.out.println("je me déconnecte");
+			this.goAccueil(request,  response);
+			break;
 		default:
-			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			this.goAccueil(request,  response);			
 			break;
 		}
     }
@@ -261,13 +258,20 @@ public class mainServlet extends HttpServlet {
 		int nbPlaces = Integer.parseInt(request.getParameter("nbPlaces"));
 		if(request.getParameter("arrivee")!=null) {
 			int idEtapeArrivee = Integer.parseInt(request.getParameter("arrivee"));
-			System.out.println("Jai réservé le trajet N° "+idTrajet+" pour destination de "+idEtapeArrivee+"  et avec " + nbPlaces + "  passagers et je suis "+currentLogin+" !");
 			facade.reserverTrajet(idTrajet, nbPlaces,currentLogin, idEtapeArrivee);
+			request.setAttribute("successReservation", "true");
 		}
 		else {
-			System.out.println("Vous n'avez pas choisi d'étapes d'arrivée !");
+			request.setAttribute("failReservation", "true");
+			request.setAttribute("reason", "Vous n'avez pas choisi d'étapes d'arrivée !");
 		}
-		this.goAccueil(request, response);
+		
+		
+		//faire en sorte que les villes choisies restent dans les listes déroulantes
+		request.setAttribute("listeVilles", facade.getNameVille());
+		request.setAttribute("listeVehicules", facade.getNameVehicule());
+		request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
+		
 	}
 	
 	private void rechercheTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
