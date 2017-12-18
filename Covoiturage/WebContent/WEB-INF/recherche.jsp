@@ -16,13 +16,19 @@
 	<span>De</span>
 	<select name="villeDepart" size="1" style=" padding:5px; font-size: inherit;">
 		<c:forEach items="${listeVilles}" var="v">
-			<option>${v}</option>
+			<c:if test="${villeDepartSelect eq v}">
+			<option selected>${v}</option></c:if>
+			<c:if test="${villeDepartSelect ne v}">
+			<option>${v}</option></c:if>
 		</c:forEach>
 	</select>
 	<span>Vers</span>
 	<select name="villeArrivee" size="1" style=" padding:5px; font-size: inherit;">
 		<c:forEach items="${listeVilles}" var="v">
-			<option>${v}</option>
+			<c:if test="${villeArriveeSelect eq v}">
+			<option selected>${v}</option></c:if>
+			<c:if test="${villeArriveeSelect ne v}">
+			<option>${v}</option></c:if>
 		</c:forEach>
 	</select>
 	
@@ -67,6 +73,8 @@
 					</select>
 					<button type ="submit" name ="todo" value="reservation">Réserver</button>
 					<input name="idTrajet" type="hidden" value="${t.idTrajet}">
+					<input name="villeDepart" type="hidden" value="${villeDepartSelect}">
+					<input name="villeArrivee" type="hidden" value="${villeArriveeSelect}">
 				</c:if>
 				</form>
 			

@@ -281,17 +281,17 @@ public class mainServlet extends HttpServlet {
 		
 		
 		//faire en sorte que les villes choisies restent dans les listes déroulantes
-		request.setAttribute("listeVilles", facade.getNameVille());
-		request.setAttribute("listeVehicules", facade.getNameVehicule());
-		request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
+		this.rechercheTrajet(request, response);
 		
 	}
+	
 	
 	private void rechercheTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String villeDep = (String) request.getParameter("villeDepart");
 		String villeArr = (String) request.getParameter("villeArrivee");
-		
+		request.setAttribute("villeDepartSelect", villeDep);
+		request.setAttribute("villeArriveeSelect", villeArr);
 		request.setAttribute("listeTrajets", facade.getTrajets(villeDep, villeArr));
 		request.setAttribute("listeVilles", facade.getNameVille());
 		request.setAttribute("listeVehicules", facade.getNameVehicule());
