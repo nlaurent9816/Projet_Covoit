@@ -24,32 +24,45 @@ public class Trajet {
 	private List<Reservation> passagers;
 	
 	@ManyToOne
-	private Vehicule typeVehicule;
+	private Vehicule gabaritVehicule;
 	
 	private String monVehicule;
 	
 	private String dateDepart; //garder ce type et faire une méthode pour parser chaine ou autre type plus convenable ?
-	
+
 	private String heureDepart;//idem que date
 
 	@ManyToOne
 	private Ville villeDepart;
 	
-	@ManyToOne
-	private Ville villeArrivee;
-	
-	@ManyToMany
+	@OneToMany
 	@JoinTable(
 			name="EtapesTrajet", 
 			joinColumns=
 				@JoinColumn(name="id_trajet"),
 			inverseJoinColumns=
 				@JoinColumn(name="id_etape"))
-	private List<Ville> lesEtapes;  // n étapes 
+	private List<Etape> lesEtapes;  // n étapes 
 	
-	//private List<Float> lesTarifs; // n+1 tarifs le premier étant le tarif depuis la ville de départ
 	
 	private int nombrePlaces;
+	
+	private int nombrePlacesRestantes;
+
+	public Trajet() {
+	}
+	
+	public Trajet(InfoUtilisateur conducteur, Vehicule gabarit_vehicule, String descVehicule, String date, String heure, Ville depart, List<Etape> etapes, int places) {
+		this.conducteur=conducteur;
+		this.gabaritVehicule=gabarit_vehicule;
+		this.monVehicule=descVehicule;
+		this.dateDepart=date;
+		this.heureDepart=heure;
+		this.villeDepart=depart;
+		this.lesEtapes=etapes;
+		this.nombrePlaces=places;
+		this.nombrePlacesRestantes=places;
+	}
 
 	public int getIdTrajet() {
 		return idTrajet;
@@ -68,11 +81,11 @@ public class Trajet {
 	}
 
 	public Vehicule getTypeVehicule() {
-		return typeVehicule;
+		return gabaritVehicule;
 	}
 
 	public void setTypeVehicule(Vehicule typeVehicule) {
-		this.typeVehicule = typeVehicule;
+		this.gabaritVehicule = typeVehicule;
 	}
 
 	public String getMonVehicule() {
@@ -107,29 +120,14 @@ public class Trajet {
 		this.villeDepart = villeDepart;
 	}
 
-	public Ville getVilleArrivee() {
-		return villeArrivee;
-	}
 
-	public void setVilleArrivee(Ville villeArrivee) {
-		this.villeArrivee = villeArrivee;
-	}
-
-	public List<Ville> getLesEtapes() {
+	public List<Etape> getLesEtapes() {
 		return lesEtapes;
 	}
 
-	public void setLesEtapes(List<Ville> lesEtapes) {
+	public void setLesEtapes(List<Etape> lesEtapes) {
 		this.lesEtapes = lesEtapes;
 	}
-
-	/*public List<Float> getLesTarifs() {
-		return lesTarifs;
-	}
-
-	public void setLesTarifs(List<Float> lesTarifs) {
-		this.lesTarifs = lesTarifs;
-	}*/
 
 	public int getNombrePlaces() {
 		return nombrePlaces;
@@ -137,6 +135,30 @@ public class Trajet {
 
 	public void setNombrePlaces(int nombrePlaces) {
 		this.nombrePlaces = nombrePlaces;
+	}
+	
+	public List<Reservation> getPassagers() {
+		return passagers;
+	}
+
+	public void setPassagers(List<Reservation> passagers) {
+		this.passagers = passagers;
+	}
+
+	public Vehicule getGabaritVehicule() {
+		return gabaritVehicule;
+	}
+
+	public void setGabaritVehicule(Vehicule gabaritVehicule) {
+		this.gabaritVehicule = gabaritVehicule;
+	}
+	
+	public int getNombrePlacesRestantes() {
+		return nombrePlacesRestantes;
+	}
+
+	public void setNombrePlacesRestantes(int nombrePlacesRestantes) {
+		this.nombrePlacesRestantes = nombrePlacesRestantes;
 	}
 
 

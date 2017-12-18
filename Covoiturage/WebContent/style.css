@@ -1,0 +1,100 @@
+
+
+.menu {
+
+	background-color:#494848;
+	height:50px;
+	width:100%;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	
+}
+
+.menu li{
+	display:inline;
+	margin:5px;
+	vertical-align:middle;
+	height:100%;
+	
+}
+
+.menu button{
+	color:#d3d7cf;
+	background-color:inherit;
+	text-decoration:none;
+	border:window;
+	height:100%;
+}
+
+.menu button:hover{
+	color:#2e3436;
+	background-color:#b3e6ff;
+}
+
+.menu ul{
+	height:100%;
+	text-align:center;
+}
+
+.menu button:active{
+	color:white;
+	background-color:#888a85;
+}
+
+.loginRegister{
+	display: flex;
+	padding-left: 20%;
+	padding-right: 20%;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background-color: #b3e6ff;
+}
+
+.loginRegister form{
+	background-color: #e1f5ff;
+	padding: 32px;
+	padding-right:10%;
+	width:50%;
+	text-align: right;
+	border:ridge 6px;
+	border-color: #808080;
+}
+input{
+	border:2px;
+	border-style:solid;
+	border-color: #babdb6;
+	border-radius: 8px;
+
+}
+
+.searchForm{
+	background-color: #b3e6ff;
+	text-align: center;
+	border-bottom-left-radius: 12px; 
+	border-bottom-right-radius: 12px;
+	margin-bottom: 32px;
+}
+
+.results{
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	background-color: #e1f5ff;
+	padding: 15px;
+}
+
+.target{
+	border-bottom-style: dashed;
+	border-bottom-color: #babdb6;
+}
+
+.bottom{
+	padding: 10px; 
+	background-color: #eeeeec;
+	color:#2e3436; 
+	border-bottom-left-radius: 12px; 
+	border-bottom-right-radius: 12px;
+}
+
+#connexion{
+	margin-top:10px;
+}

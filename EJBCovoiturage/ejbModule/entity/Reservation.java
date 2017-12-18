@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Reservation {
@@ -19,11 +20,23 @@ public class Reservation {
 	
 	private int nombrePlace;
 	
-	@ManyToOne 
-	private Ville arrivee; //une ville d'arrivée peut être dans plusieurs réservations (MD)
-	
+	@ManyToOne
+	private Etape etapeArrivee;//une même étape peut être réservé par plusieurs personnes
+
 	private String statut; //approuvé, non approuvé, en attente
 
+	public Reservation() {
+		
+	}
+	
+	public Reservation(Trajet trajet, int nbPlaces, InfoUtilisateur passager, String statut, Etape etapeArrivee) {
+		this.leTrajet=trajet;
+		this.nombrePlace=nbPlaces;
+		this.passager=passager;
+		this.statut=statut;
+		this.etapeArrivee=etapeArrivee;
+	}
+	
 	public int getIdReservation() {
 		return idReservation;
 	}
@@ -56,14 +69,6 @@ public class Reservation {
 		this.nombrePlace = nombrePlace;
 	}
 
-	public Ville getArrivee() {
-		return arrivee;
-	}
-
-	public void setArrivee(Ville arrivee) {
-		this.arrivee = arrivee;
-	}
-
 	public String getStatut() {
 		return statut;
 	}
@@ -72,6 +77,13 @@ public class Reservation {
 		this.statut = statut;
 	}
 	
+	public Etape getEtapeArrivee() {
+		return etapeArrivee;
+	}
+
+	public void setEtapeArrivee(Etape etapeArrivee) {
+		this.etapeArrivee = etapeArrivee;
+	}
 	
 	
 

@@ -8,17 +8,26 @@ import javax.persistence.Id;
 public class Vehicule {
 
 	
-		@Id	
-		private String typeVehicule;
+		@Id	@GeneratedValue
+		private int id;
+		
+		private String gabaritVehicule;
 
-		public String getTypeVehicule() {
-			return typeVehicule;
+		public int getId() {
+			return id;
 		}
 
-		public void setTypeVehicule(String typeVehicule) {
-			this.typeVehicule = typeVehicule;
+		public void setId(int id) {
+			this.id = id;
 		}
 
+		public String getGabaritVehicule() {
+			return gabaritVehicule;
+		}
+
+		public void setGabaritVehicule(String gabaritVehicule) {
+			this.gabaritVehicule = gabaritVehicule;
+		}
 		
 		
 }

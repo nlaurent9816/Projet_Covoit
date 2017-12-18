@@ -1,43 +1,65 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>Covoiturage</title>
+<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-<nav class="menu">
-  <ul>
-  	<li><a href="#Apropos">Accueil</a></li><!--visible pour tout le monde, ramène sur la page d'accueil  -->
-  	<li><a href="#Apropos">Se connecter</a></li><!--visible que si non connecté, mène vers page de connexion  -->
-    <li><a href="#Contact">S'enregistrer</a></li><!--visible que si non connecté, mène vers page d'enregistrement  -->
-    <li><a href="#Accueil">Votre compte</a></li><!--visible que si connecté, contient liste des réservations, des trajets proposés  -->
-    <li><a href="#Apropos">Trouver un trajet</a></li><!--toujours visible, mène vers page de recherche avancée  -->
-    <li><a href="#Contact">Ajouter ville/voiture</a></li><!--Visible pour l'administrateur seulement  -->
-  </ul>
-</nav>
-<div style="height:500px; width:100%; background-color: #b3e6ff; display: table; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-<div align="center" style="display: table-cell; vertical-align: middle;">
+
+<%@include file="header.jsp" %>
+
+
+<!-- Champ de recherche -->
+<div style="height:500px; width:100%; background-color: #b3e6ff; display: table;">
+
+<div  align="center" style="display: table-cell; vertical-align: middle;">
+<!-- 
+<c:if test = "${not connecte}">
 <div id=connexion>
 	Connectez-vous :
 	<form method="post">
 		Login :<input type ="text" name ="login"/>
 		<br/>
 		MDP : <input type ="password" name ="mdp"/>
+		<br/>
 		<button type = "submit" name ="todo" value="connect">Connexion</button>
 	</form>
 </div>
+</c:if>
+
+<c:if test = "${connecte}">
+Vous êtes connecté.
+</c:if>
+-->
 <h1 style="font-size: 60px; margin-bottom: 20px;">Covoiturage !</h1>
-<div  style="font-size: 30px; display: table-cell; text-align: center;">
-De
-<input type="text" placeholder="D�part" style=" padding:5px; font-size: inherit;" >
-Vers
-<input type="text" placeholder="Arriv�e" style=" padding:5px; font-size: inherit;" >
+<form id="recherche" method="post">
+	<div  style="font-size: 30px; display: table-cell; text-align: center;">
+
+	<span>De</span>
+	<select name="villeDepart" size="1" style=" padding:5px; font-size: inherit;">
+		<c:forEach items="${listeVilles}" var="v">
+			<option>${v}</option>
+		</c:forEach>
+	</select>
+
+	<span>Vers</span>
+	<select name="villeArrivee" size="1" style=" padding:5px; font-size: inherit;">
+		<c:forEach items="${listeVilles}" var="v">
+			<option>${v}</option>
+		</c:forEach>
+	</select>
+
+	</div>
+	<button type="submit" name="todo" value="recherche" style="font-size: 20px; display: table-cell; text-align: center; margin: 15px; padding: 5px;">Rechercher !</button>
+</form>
 </div>
-<button style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
 </div>
-</div>
-<div align="right" style="padding: 10px; background-color: #f2f2f2;color:gray; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-	Site r�alis� par Manuel Ory et Nicolas Laurent - 2017
-</div>
+
+<%@include file="footer.jsp" %>
+
 </body>
 </html>

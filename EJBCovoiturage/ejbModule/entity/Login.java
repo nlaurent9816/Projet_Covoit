@@ -15,6 +15,15 @@ public class Login {
 	@OneToOne
 	private InfoUtilisateur infos;//A un login, il y a un utilisateur (MD)
 
+	public Login(String newLogin, String newPassword, InfoUtilisateur newIu) {
+		this.login=newLogin;
+		this.password=newPassword;
+		this.infos=newIu;
+	}
+	
+	public Login() {
+	}
+	
 	public String getLogin() {
 		return login;
 	}
