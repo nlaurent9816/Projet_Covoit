@@ -229,8 +229,21 @@ public class mainServlet extends HttpServlet {
 					this.reserverTrajet(request, response);
 					break;
 				case "VerifReservation":
-					System.out.println("Je veux vérifier les réservations du trajet N° "+ request.getParameter("idTrajet"));
-					this.goAccueil(request, response);
+					int idTrajet = Integer.parseInt(request.getParameter("idTrajet"));
+					request.setAttribute("idTrajet", idTrajet);
+					request.setAttribute("lesResAValide", this.facade.getResAValide(idTrajet));
+					request.setAttribute("lesResValide", this.facade.getResValide(idTrajet));
+					request.getRequestDispatcher("WEB-INF/detailsTrajet.jsp").forward(request, response);
+					break;
+				case "ConfirmerReservation":
+					int idReservation = Integer.parseInt(request.getParameter("idReservation"));
+					System.out.println("idRes retrouvé :" +request.getParameter("idTrajet"));
+					int id = Integer.parseInt(request.getParameter("idTrajet"));
+					this.facade.confirmerReservation(idReservation);
+					request.setAttribute("lesResAValide", this.facade.getResAValide(id));
+					request.setAttribute("lesResValide", this.facade.getResValide(id));
+					request.setAttribute("idTrajet", id);
+					request.getRequestDispatcher("WEB-INF/detailsTrajet.jsp").forward(request, response);
 					break;
 				case "AnnulerReservation":
 					this.facade.annulerReservation(Integer.parseInt(request.getParameter("idReservation")));

@@ -40,6 +40,32 @@ public class Facade {
 		return mesTrajets;
 	}
 	
+	public List<Reservation> getResAValide(int idTrajet){
+		Query q = em.createQuery("SELECT t.passagers FROM Trajet t WHERE t.idTrajet= :idTrajet");
+		q.setParameter("idTrajet", idTrajet);
+		List<Reservation> resAValideTemp = (List<Reservation>) q.getResultList();
+		List<Reservation> resAValide = new ArrayList<Reservation>();
+		for (Reservation r : resAValideTemp) {
+			if(r.getStatut().equals("A confirmer")) {
+				resAValide.add(r);
+			}
+		}
+		return resAValide;	
+	}
+	
+	public List<Reservation> getResValide(int idTrajet){
+		Query q = em.createQuery("SELECT t.passagers FROM Trajet t WHERE t.idTrajet= :idTrajet");
+		q.setParameter("idTrajet", idTrajet);
+		List<Reservation> resValideTemp = (List<Reservation>) q.getResultList();
+		List<Reservation> resValide = new ArrayList<Reservation>();
+		for (Reservation r : resValideTemp) {
+			if(r.getStatut().equals("Valide")) {
+				resValide.add(r);
+			}
+		}
+		return resValide;	
+	}
+	
 	public void annulerReservation(int idRes) {
 		//on modifie le nombres de places restantes pour le trajet correspondant
 		Reservation maRes = em.find(Reservation.class, idRes);
@@ -241,6 +267,13 @@ public class Facade {
 		q.setParameter("nbReserves", nbPlaces);
 		q.setParameter("idTrajet", idTrajet);
 		q.executeUpdate();
+	}
+	
+	public void confirmerReservation(int idReservation){
+		Query q = em.createQuery("UPDATE Reservation r SET r.statut = 'Valide' WHERE r.idReservation = :idRes");
+		q.setParameter("idRes", idReservation);
+		q.executeUpdate();
+		
 	}
 
 }
