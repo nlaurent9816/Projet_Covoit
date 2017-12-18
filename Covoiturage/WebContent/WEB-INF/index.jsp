@@ -29,15 +29,15 @@
 <h1 style="font-size: 60px; margin-bottom: 20px;">Covoiturage !</h1>
 <div  style="font-size: 30px; display: table-cell; text-align: center;">
 De
-<input type="text" placeholder="DÃ©part" style=" padding:5px; font-size: inherit;" >
+<input type="text" placeholder="Départ" style=" padding:5px; font-size: inherit;" >
 Vers
-<input type="text" placeholder="ArrivÃ©e" style=" padding:5px; font-size: inherit;" >
+<input type="text" placeholder="Arrivée" style=" padding:5px; font-size: inherit;" >
 </div>
 <button style="font-size: 20px; display: table-cell; text-align: center; margin: 10px; padding: 5px;">Rechercher !</button>
 </div>
 </div>
 <div align="right" style="padding: 10px; background-color: #f2f2f2;color:gray; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-	Site rÃ©alisÃ© par Manuel Ory et Nicolas Laurent - 2017
+	Site réalisé par Manuel Ory et Nicolas Laurent - 2017
 </div>
 </body>
 </html>
