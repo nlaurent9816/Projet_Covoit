@@ -6,15 +6,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Détails Trajet</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
 <%@include file="header.jsp" %>
-
-<div id="LesReservationsAValider">
+<div style="background-color: #b3e6ff;padding: 1px;">
+<div id="LesReservationsAValider" class="simpleForm">
 	<h1>Les Réservations à valider</h1>
 	<c:forEach items="${lesResAValide}" var="r">
+	<div>
 	 Passager : ${r.passager.nom } ${r.passager.prenom } 
 	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}
 	 Coût : ${r.etapeArrivee.tarif} €
@@ -26,20 +27,23 @@
 		<input type="hidden" name="idTrajet" value="${idTrajet}"/>
 		
 	</form>
+	</div>
 	</c:forEach>
 </div>
 
-<div id="LesReservationsConfirmees">
+<div id="LesReservationsConfirmees" class="simpleForm">
 	<h1>Les Réservations confirmées</h1>
 	<c:forEach items="${lesResValide}" var="r">
+	<div>
 	 Passager : ${r.passager.nom } ${r.passager.prenom } 
 	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}
 	 Coût : ${r.etapeArrivee.tarif} €
 	 Mail : ${r.passager.mail }  Tel : ${r.passager.tel }
 	 Statut : ${r.statut}
+	 </div>
 	</c:forEach>
 </div>
-
+</div>
 
 
 <%@include file="footer.jsp" %>
