@@ -2,12 +2,14 @@ package entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
-@Entity
+@Entity @SequenceGenerator(name = "port_gen", sequenceName = "port_gen",  initialValue = 1000)
 public class Ville {
 	
-	@Id	@GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.AUTO, generator = "port_gen")
 	private int id;
 	
 	private String ville;

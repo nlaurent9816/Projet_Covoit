@@ -92,7 +92,7 @@ public class mainServlet extends HttpServlet {
 		String[] tarifs_etapes = (String[]) request.getParameterValues("tarifEtape");
 		String place_trajet = (String) request.getParameter("placeTrajet");
 		
-		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals("")) && (tarifs_etapes.length==etapes_trajet.length)) 
+		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals(""))) 
 		{
 				//on enregistre le nouveau trajet
 				this.facade.enregistrerTrajet(this.currentLogin, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
@@ -117,6 +117,12 @@ public class mainServlet extends HttpServlet {
 			if(facade.checkUtilisateur(login, password)) {
 				request.getSession().setAttribute("login", login);
 				request.setAttribute("connecte", "true");
+				if (this.facade.isAdmin(login)) {
+					request.setAttribute("role", "admin");
+				}
+				else {
+					request.setAttribute("role", "utilisateur");
+				}
 			}
 			else {
 				request.setAttribute("failConnect", "true");
@@ -147,11 +153,13 @@ public class mainServlet extends HttpServlet {
 			break;
 		case "recherche":
 			request.setAttribute("listeVilles", facade.getNameVille());
-			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			//request.setAttribute("listeVehicules", facade.getNameVehicule());
 			request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
 			break;
 		case "ajout":
-			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
 			break;
 		case "ajoutTrajet":
 			//faire passer la liste des villes et des véhicules
@@ -203,6 +211,12 @@ public class mainServlet extends HttpServlet {
 		}
 		else {
 			request.setAttribute("connecte", "true");
+			if (this.facade.isAdmin(currentLogin)) {
+				request.setAttribute("role", "admin");
+			}
+			else {
+				request.setAttribute("role", "utilisateur");
+			}
 		}
 		
 		//si clic sur barre de navigation
@@ -229,8 +243,21 @@ public class mainServlet extends HttpServlet {
 					this.reserverTrajet(request, response);
 					break;
 				case "VerifReservation":
-					System.out.println("Je veux vérifier les réservations du trajet N° "+ request.getParameter("idTrajet"));
-					this.goAccueil(request, response);
+					int idTrajet = Integer.parseInt(request.getParameter("idTrajet"));
+					request.setAttribute("idTrajet", idTrajet);
+					request.setAttribute("lesResAValide", this.facade.getResAValide(idTrajet));
+					request.setAttribute("lesResValide", this.facade.getResValide(idTrajet));
+					request.getRequestDispatcher("WEB-INF/detailsTrajet.jsp").forward(request, response);
+					break;
+				case "ConfirmerReservation":
+					int idReservation = Integer.parseInt(request.getParameter("idReservation"));
+					System.out.println("idRes retrouvé :" +request.getParameter("idTrajet"));
+					int id = Integer.parseInt(request.getParameter("idTrajet"));
+					this.facade.confirmerReservation(idReservation);
+					request.setAttribute("lesResAValide", this.facade.getResAValide(id));
+					request.setAttribute("lesResValide", this.facade.getResValide(id));
+					request.setAttribute("idTrajet", id);
+					request.getRequestDispatcher("WEB-INF/detailsTrajet.jsp").forward(request, response);
 					break;
 				case "AnnulerReservation":
 					this.facade.annulerReservation(Integer.parseInt(request.getParameter("idReservation")));
@@ -243,6 +270,18 @@ public class mainServlet extends HttpServlet {
 					request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
 					request.setAttribute("listeReservations", facade.getReservations(currentLogin));
 					request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
+					break;
+				case "ajouterVille" :
+					this.facade.ajoutVille(request.getParameter("ajoutVille"));
+					request.setAttribute("listeVilles", facade.getNameVille());
+					request.setAttribute("listeVehicules", facade.getNameVehicule());
+					request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
+					break;
+				case "ajouterVehicule" :
+					this.facade.ajoutVehicule(request.getParameter("ajoutVehicule"));
+					request.setAttribute("listeVilles", facade.getNameVille());
+					request.setAttribute("listeVehicules", facade.getNameVehicule());
+					request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
 					break;
 				default:
 					this.goAccueil(request, response);
@@ -268,17 +307,17 @@ public class mainServlet extends HttpServlet {
 		
 		
 		//faire en sorte que les villes choisies restent dans les listes déroulantes
-		request.setAttribute("listeVilles", facade.getNameVille());
-		request.setAttribute("listeVehicules", facade.getNameVehicule());
-		request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
+		this.rechercheTrajet(request, response);
 		
 	}
+	
 	
 	private void rechercheTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String villeDep = (String) request.getParameter("villeDepart");
 		String villeArr = (String) request.getParameter("villeArrivee");
-		
+		request.setAttribute("villeDepartSelect", villeDep);
+		request.setAttribute("villeArriveeSelect", villeArr);
 		request.setAttribute("listeTrajets", facade.getTrajets(villeDep, villeArr));
 		request.setAttribute("listeVilles", facade.getNameVille());
 		request.setAttribute("listeVehicules", facade.getNameVehicule());

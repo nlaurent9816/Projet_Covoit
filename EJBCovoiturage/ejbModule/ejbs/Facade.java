@@ -40,6 +40,32 @@ public class Facade {
 		return mesTrajets;
 	}
 	
+	public List<Reservation> getResAValide(int idTrajet){
+		Query q = em.createQuery("SELECT t.passagers FROM Trajet t WHERE t.idTrajet= :idTrajet");
+		q.setParameter("idTrajet", idTrajet);
+		List<Reservation> resAValideTemp = (List<Reservation>) q.getResultList();
+		List<Reservation> resAValide = new ArrayList<Reservation>();
+		for (Reservation r : resAValideTemp) {
+			if(r.getStatut().equals("A confirmer")) {
+				resAValide.add(r);
+			}
+		}
+		return resAValide;	
+	}
+	
+	public List<Reservation> getResValide(int idTrajet){
+		Query q = em.createQuery("SELECT t.passagers FROM Trajet t WHERE t.idTrajet= :idTrajet");
+		q.setParameter("idTrajet", idTrajet);
+		List<Reservation> resValideTemp = (List<Reservation>) q.getResultList();
+		List<Reservation> resValide = new ArrayList<Reservation>();
+		for (Reservation r : resValideTemp) {
+			if(r.getStatut().equals("Valide")) {
+				resValide.add(r);
+			}
+		}
+		return resValide;	
+	}
+	
 	public void annulerReservation(int idRes) {
 		//on modifie le nombres de places restantes pour le trajet correspondant
 		Reservation maRes = em.find(Reservation.class, idRes);
@@ -124,17 +150,18 @@ public class Facade {
 		
 		List<Etape> etapes = new ArrayList<Etape>();
 		Query q;
-		if(tarifs_etapes.length>0) {
-			for(int i =0;i<tarifs_etapes.length;i++) {
-				q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
-				q.setParameter("maVille", etapes_trajet[i]);
-				Ville v = (Ville) q.getSingleResult();
-				Etape e = new Etape(v, Float.parseFloat(tarifs_etapes[i]));
-				em.persist(e);
-				etapes.add(e);
+		if(tarifs_etapes!=null) {
+			if(tarifs_etapes.length>0) {
+				for(int i =0;i<tarifs_etapes.length;i++) {
+					q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
+					q.setParameter("maVille", etapes_trajet[i]);
+					Ville v = (Ville) q.getSingleResult();
+					Etape e = new Etape(v, Float.parseFloat(tarifs_etapes[i]));
+					em.persist(e);
+					etapes.add(e);
+				}
 			}
 		}
-		
 		//get Ville Arrivée
 		q = em.createQuery("FROM Ville v WHERE v.ville=:maVille");
 		q.setParameter("maVille", ville_arrivee);
@@ -199,7 +226,7 @@ public class Facade {
 	}
 	
 	public List<String> getNameVille(){
-		Query q = em.createQuery("From Ville");
+		Query q = em.createQuery("From Ville v ORDER BY v.ville");
 		List<Ville> listObject = q.getResultList();
 		List<String> listVilles = new ArrayList<String>();
 		for (Ville v : listObject) {
@@ -209,7 +236,7 @@ public class Facade {
 	}
 	
 	public List<String> getNameVehicule(){
-		Query q = em.createQuery("From Vehicule");
+		Query q = em.createQuery("From Vehicule v ORDER BY v.gabaritVehicule");
 		List<Vehicule> listObject = (List<Vehicule>) q.getResultList();
 		List<String> listVehicules = new ArrayList<String>();
 		for (Vehicule v : listObject) {
@@ -242,5 +269,26 @@ public class Facade {
 		q.setParameter("idTrajet", idTrajet);
 		q.executeUpdate();
 	}
-
+	
+	public void confirmerReservation(int idReservation){
+		Query q = em.createQuery("UPDATE Reservation r SET r.statut = 'Valide' WHERE r.idReservation = :idRes");
+		q.setParameter("idRes", idReservation);
+		q.executeUpdate();
+		
+	}
+	
+	public boolean isAdmin(String currentLogin) {
+		Login user = em.find(Login.class, currentLogin);
+		return (user.getRole()==0);
+	}
+	
+	public void ajoutVille(String ville){
+		Ville maVille = new Ville(ville);
+		em.persist(maVille);
+	}
+	
+	public void ajoutVehicule(String vehicule){
+		Vehicule monVehicule = new Vehicule(vehicule);
+		em.persist(monVehicule);
+	}
 }

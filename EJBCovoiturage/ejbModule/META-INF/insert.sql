@@ -17,9 +17,11 @@ INSERT INTO VEHICULE (id, gabaritvehicule) VALUES (7, 'coupé');
 INSERT INTO VEHICULE (id, gabaritvehicule) VALUES (8, 'sportive');
 INSERT INTO VEHICULE (id, gabaritvehicule) VALUES (9, 'monospace');
 
+INSERT INTO INFOUTILISATEUR (idinfo, mail, nom, prenom, sexe, tel) VALUES (0, 'admin.admin@admin.ad', 'Admin', 'Admin', 'homme', '0123456789');
+INSERT INTO LOGIN (login, password, role, infos_idinfo) VALUES ('admin', '8c6976e5b541415bde98bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 0, 0);
 
-INSERT INTO INFOUTILISATEUR (idinfo, mail, nom, prenom, sexe, tel) VALUES (0, 'a', 'a', 'a', 'homme', 'a');
-INSERT INTO LOGIN (login, password, infos_idinfo) VALUES ('a', 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', 0);
+INSERT INTO INFOUTILISATEUR (idinfo, mail, nom, prenom, sexe, tel) VALUES (1, 'georges.perec@mail.fr', 'Georges', 'Perec', 'homme', '0978534212');
+INSERT INTO LOGIN (login, password, role, infos_idinfo) VALUES ('a', 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', 1, 1);
 
 INSERT INTO TRAJET (idTrajet, datedepart, heuredepart, monvehicule, nombreplaces, nombreplacesrestantes, conducteur_idinfo, gabaritvehicule_id, villedepart_id) VALUES (0, '2017-12-17', '8 h 20', 'aa', 3, 3, 0, 0, 0);
 INSERT INTO TRAJET (idTrajet, datedepart, heuredepart, monvehicule, nombreplaces, nombreplacesrestantes, conducteur_idinfo, gabaritvehicule_id, villedepart_id) VALUES (1, '2017-12-18', '23 h 30', 'aaa', 4, 4, 0, 3, 4);
