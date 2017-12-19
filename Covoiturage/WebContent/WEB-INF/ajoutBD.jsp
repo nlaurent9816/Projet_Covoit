@@ -12,30 +12,35 @@
 </head>
 <body>
 <%@include file="header.jsp" %>
-<form id="ajoutVille" method="post">
-	<label>Ville déjà présente</label>
-	<select name="villeDepart" size="5" style=" padding:5px; font-size: inherit;">
+<div style="background-color: #b3e6ff;padding: 1px;">
+<form id="ajoutVille" method="post" class="simpleForm">
+	<h1>Ajouter ville</h1>
+	<label>Villes déjà présentes :</label><br>
+	<select name="villeDepart" size="5" style=" padding:2px; font-size: inherit; margin: 8px;">
 		<c:forEach items="${listeVilles}" var="v">		
 			<option>${v}</option>
 		</c:forEach>
 	</select>
+	<br>
 	<label>Ajouter une ville :</label>
 	<input type="text" name="ajoutVille"/>
 	<button type="submit" name="todo" value="ajouterVille">Ajouter une ville</button>
 </form>
 
-<form id="ajoutVehicule" method="post">
-	<label>Véhicule déjà présent</label>
-	<select name="vehicule" size="5" style=" padding:5px; font-size: inherit;">
+<form id="ajoutVehicule" method="post" class="simpleForm">
+	<h1>Ajouter véhicule</h1>
+	<label>Véhicules déjà présents :</label><br>
+	<select name="vehicule" size="5" style=" padding:2px; font-size: inherit;margin: 8px;">
 		<c:forEach items="${listeVehicules}" var="v">		
 			<option>${v}</option>
 		</c:forEach>
 	</select>
+	<br>
 	<label>Ajouter un véhicule :</label>
 	<input type="text" name="ajoutVehicule"/>
 	<button type="submit" name="todo" value="ajouterVehicule">Ajouter un véhicule</button>
 </form>
-
+</div>
 <%@include file="footer.jsp" %>
 
 </body>

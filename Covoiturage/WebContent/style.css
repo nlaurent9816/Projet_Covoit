@@ -54,8 +54,7 @@
 	padding-right:10%;
 	width:50%;
 	text-align: right;
-	border:ridge 6px;
-	border-color: #808080;
+	border:ridge 6px #808080;
 }
 input{
 	border:2px;
@@ -63,7 +62,7 @@ input{
 	border-color: #babdb6;
 	border-radius: 8px;
 	padding: 2px;
-
+	margin: 2px;
 }
 
 .searchForm{
@@ -100,6 +99,24 @@ input{
     border: 1px solid #198dfe;
     display: inline-flex;
     margin-left: 6px;
+    padding: 4px;
+}
+
+.trajetTable{
+	border:ridge 6px #808080;
+	background-color:white;
+	margin:10px;
+	border-collapse: collapse;
+}
+
+.trajetTable th,.trajetTable td{
+	padding: 4px;
+}
+.trajetTable th{
+	text-align: right;
+}
+#lesEtapes{
+	list-style: none;
     padding: 4px;
 }
 
