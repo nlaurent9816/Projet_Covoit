@@ -6,10 +6,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
-@Entity @SequenceGenerator(name = "port_gen", sequenceName = "port_gen",  initialValue = 1000)
+@Entity
 public class Ville {
 	
-	@Id @GeneratedValue(strategy = GenerationType.AUTO, generator = "port_gen")
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	private String ville;

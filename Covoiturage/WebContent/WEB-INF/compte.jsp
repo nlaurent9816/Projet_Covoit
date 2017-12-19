@@ -18,14 +18,16 @@
 	<h1>Mes Réservations</h1>
 	<c:forEach items="${listeReservations}" var="r">
 	<div>
-	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}
+	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}  le ${r.leTrajet.dateDepart }
 	 Conducteur : ${r.leTrajet.conducteur.nom } ${r.leTrajet.conducteur.prenom } 
 	 Coût : ${r.etapeArrivee.tarif} €
 	 Statut : ${r.statut}
-	<form id="annulerReservation" method="post">
-		<button type="submit" name="todo" value="AnnulerReservation">Annuler la réservation</button>
-		<input type="hidden" name="idReservation" value="${ r.idReservation}"/>
-	</form>
+	<c:if test="${r.statut ne 'Refuse' }">
+		<form id="annulerReservation" method="post">
+			<button type="submit" name="todo" value="AnnulerReservation">Annuler la réservation</button>
+			<input type="hidden" name="idReservation" value="${ r.idReservation}"/>
+		</form>
+	</c:if>
 	</div>
 	</c:forEach>
 </div>

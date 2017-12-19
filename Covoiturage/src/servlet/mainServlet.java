@@ -27,12 +27,82 @@ public class mainServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private void goAccueil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("listeVilles", facade.getNameVille());
-		request.setAttribute("listeVehicules", facade.getNameVehicule());
-		request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
-	}
-    
+	/*********************************************************Partie Navigation du site *****************************************************************/
+
+	  private void navigation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	switch (request.getParameter("Nav")) {
+			case "accueil":
+				this.goAccueil(request, response);
+				break;
+			case "register":
+				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
+				break;
+			case "compte":
+				this.goCompte(request, response);
+				break;
+			case "recherche":
+				this.goRecherche(request, response);
+				break;
+			case "ajout":
+				this.goAjoutBD(request, response);
+				break;
+			case "ajoutTrajet":
+				//faire passer la liste des villes et des véhicules
+				this.goAjoutTrajet(request, response);
+				break;
+			case "deconnexion":
+				this.Deconnexion(request, response);
+				break;
+			default:
+				this.goAccueil(request,  response);			
+				break;
+			}
+	    }
+	    
+		private void goAccueil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+		}
+		
+	    private void goCompte(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
+			request.setAttribute("listeReservations", facade.getReservations(currentLogin));
+			request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
+	    }
+
+	    
+	    private void goRecherche(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	request.setAttribute("listeVilles", facade.getNameVille());
+			request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
+	    }
+	    
+	    private void goAjoutBD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
+	    }
+	    
+	    private void Deconnexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	request.setAttribute("connecte", "false");
+			request.getSession().setAttribute("login", null);
+			request.getSession().setAttribute("facade", null);
+			this.goAccueil(request,  response);
+	    }
+	    
+	    private void goAjoutTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	request.setAttribute("listeVilles", facade.getNameVille());
+			request.setAttribute("listeVehicules", facade.getNameVehicule());
+			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
+	    }
+
+	    /**
+	     * Enregistre un utilisateur selon les informations entrées dans le formulaire de la page register.jsp
+	     * @param request
+	     * @param response
+	     * @throws ServletException
+	     * @throws IOException
+	     */
     private void registerUtilisateur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String password = (String) request.getParameter("mdp");
 		String password_verif = (String) request.getParameter("mdpbis");
@@ -43,9 +113,8 @@ public class mainServlet extends HttpServlet {
 			String tel = (String) request.getParameter("tel");
 			String email = (String) request.getParameter("email");
 			String login = (String) request.getParameter("login");
-			//if(facade.nouveauLogin(login)) {
 				if(!nom.equals("") && !prenom.equals("") && sexe!=null && !tel.equals("") && !email.equals("") && !login.equals("")) {
-					//on enregistre le nouvel utilisateur
+			
 					try {
 						facade.enregistrerUtilisateur(nom, prenom, sexe, tel, email, login, password);
 					} catch (NoSuchAlgorithmException e) {
@@ -55,19 +124,10 @@ public class mainServlet extends HttpServlet {
 					goAccueil(request, response);
 				}
 				else {
-					//System.out.println("Il manque des informations");
-					//request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 					request.setAttribute("failRegister", "true");
 					request.setAttribute("reason", "Il manque des informations");
 					request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 				}
-			/*}
-			else {
-
-				System.out.println("Login déjà utilisé !");
-			}*/
-			
-
 		}
 		else {
 			request.setAttribute("failRegister", "true");
@@ -78,6 +138,13 @@ public class mainServlet extends HttpServlet {
 
 	}
     
+    /**
+     * Enregistre un nouveau trajet selon les informations entré par l'utilisateur sur la page nouveauTrajet.jsp
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     private void registerTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	String vehicule_desc = (String) request.getParameter("vehiculeDesc");
 		String vehicule_gabarit = (String) request.getParameter("vehiculeGabarit");
@@ -94,22 +161,27 @@ public class mainServlet extends HttpServlet {
 		
 		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals(""))) 
 		{
-				//on enregistre le nouveau trajet
 				this.facade.enregistrerTrajet(this.currentLogin, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
-				this.goAccueil(request, response);
+				request.setAttribute("successTrajet", "true");
+				this.goAjoutTrajet(request, response);
 		}
 		else {
 			request.setAttribute("failTrajet", "true");
 			request.setAttribute("reason", "Il manque des informations");
-			request.setAttribute("listeVilles", facade.getNameVille());
-			request.setAttribute("listeVehicules", facade.getNameVehicule());
-			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
+			this.goAjoutTrajet(request, response);
 		}
 			
 		
 
 	}
     
+    /**
+     * Connecte l'utilisateur si données entré dans le formulaire de la page register sont dans la BDD
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     private void connectUtilisateur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String password = (String) request.getParameter("mdp");
 		String login = (String) request.getParameter("login");
@@ -119,9 +191,11 @@ public class mainServlet extends HttpServlet {
 				request.setAttribute("connecte", "true");
 				if (this.facade.isAdmin(login)) {
 					request.setAttribute("role", "admin");
+					this.goAccueil(request, response);
 				}
 				else {
 					request.setAttribute("role", "utilisateur");
+					this.goAccueil(request, response);
 				}
 			}
 			else {
@@ -131,62 +205,16 @@ public class mainServlet extends HttpServlet {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		//que la connexion ait réussi ou non, on revient sur page index
-		//ajouter un message d'erreur si connexion non réussie
-		
-		this.goAccueil(request, response);
-
 	}
     
-    private void navigation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	switch (request.getParameter("Nav")) {
-		case "accueil":
-			this.goAccueil(request, response);
-			break;
-		case "register":
-			request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
-			break;
-		case "compte":
-			request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
-			request.setAttribute("listeReservations", facade.getReservations(currentLogin));
-			request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
-			break;
-		case "recherche":
-			request.setAttribute("listeVilles", facade.getNameVille());
-			//request.setAttribute("listeVehicules", facade.getNameVehicule());
-			request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
-			break;
-		case "ajout":
-			request.setAttribute("listeVilles", facade.getNameVille());
-			request.setAttribute("listeVehicules", facade.getNameVehicule());
-			request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
-			break;
-		case "ajoutTrajet":
-			//faire passer la liste des villes et des véhicules
-			request.setAttribute("listeVilles", facade.getNameVille());
-			request.setAttribute("listeVehicules", facade.getNameVehicule());
-			request.getRequestDispatcher("WEB-INF/nouveauTrajet.jsp").forward(request, response);
-			break;
-		case "deconnexion":
-			request.setAttribute("connecte", "false");
-			request.getSession().setAttribute("login", null);
-			request.getSession().setAttribute("facade", null);
-			System.out.println("je me déconnecte");
-			this.goAccueil(request,  response);
-			break;
-		default:
-			this.goAccueil(request,  response);			
-			break;
-		}
-    }
-    
-    
+  
 
 	/**
+	 * Partie principale du servlet, gère la plupart des actions autre que la navigation
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Récupération de la session ou création de la session+ajout de la facade personnalisée
+		/*Récupération de la session ou création de la session+ajout de la facade personnalisée*/
 		this.facade=(Facade) request.getSession().getAttribute("facade");
 		if(facade==null){
 			try{
@@ -199,10 +227,11 @@ public class mainServlet extends HttpServlet {
 			}
 		}	
 		
+		/*Recupération du login si déjà connecté*/
 		String todo = request.getParameter("todo");
 		this.currentLogin = (String) request.getSession().getAttribute("login");
 			
-		//on vérifie d'abord si on n'est pas connecté
+		/*Si non connecté et qu'on veut se connecter*/
 		if(currentLogin==null) {
 			if(todo!=null && todo.equals("connect")) {
 				this.connectUtilisateur(request, response);
@@ -219,12 +248,12 @@ public class mainServlet extends HttpServlet {
 			}
 		}
 		
-		//si clic sur barre de navigation
+		/*si action liée à la barre de navigation*/
 		if(request.getParameter("Nav")!=null) {//on a cliqué sur la barre de navigation
 			this.navigation(request, response);
 		}
-		else {//autre action que la barre de navigation
-			//si pas sur un clic de bouton, on revient page d'accueil
+		/*autre action*/
+		else {
 			if(todo==null) {
 				this.goAccueil(request, response);
 			}
@@ -243,45 +272,25 @@ public class mainServlet extends HttpServlet {
 					this.reserverTrajet(request, response);
 					break;
 				case "VerifReservation":
-					int idTrajet = Integer.parseInt(request.getParameter("idTrajet"));
-					request.setAttribute("idTrajet", idTrajet);
-					request.setAttribute("lesResAValide", this.facade.getResAValide(idTrajet));
-					request.setAttribute("lesResValide", this.facade.getResValide(idTrajet));
-					request.getRequestDispatcher("WEB-INF/detailsTrajet.jsp").forward(request, response);
+					this.verifReservation(request,  response);
 					break;
 				case "ConfirmerReservation":
-					int idReservation = Integer.parseInt(request.getParameter("idReservation"));
-					System.out.println("idRes retrouvé :" +request.getParameter("idTrajet"));
-					int id = Integer.parseInt(request.getParameter("idTrajet"));
-					this.facade.confirmerReservation(idReservation);
-					request.setAttribute("lesResAValide", this.facade.getResAValide(id));
-					request.setAttribute("lesResValide", this.facade.getResValide(id));
-					request.setAttribute("idTrajet", id);
-					request.getRequestDispatcher("WEB-INF/detailsTrajet.jsp").forward(request, response);
+					this.confirmerReservation(request, response);
+					break;
+				case "RefuserReservation":
+					this.refuserReservation(request,  response);
 					break;
 				case "AnnulerReservation":
-					this.facade.annulerReservation(Integer.parseInt(request.getParameter("idReservation")));
-					request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
-					request.setAttribute("listeReservations", facade.getReservations(currentLogin));
-					request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
+					this.annulerReservation(request,response);
 					break;
 				case "SupprimerTrajet" :
-					this.facade.supprimerTrajet(Integer.parseInt(request.getParameter("idTrajet")));
-					request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
-					request.setAttribute("listeReservations", facade.getReservations(currentLogin));
-					request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
+					this.supprimerTrajet(request, response);
 					break;
 				case "ajouterVille" :
-					this.facade.ajoutVille(request.getParameter("ajoutVille"));
-					request.setAttribute("listeVilles", facade.getNameVille());
-					request.setAttribute("listeVehicules", facade.getNameVehicule());
-					request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
+					this.ajouterVille(request,response);
 					break;
 				case "ajouterVehicule" :
-					this.facade.ajoutVehicule(request.getParameter("ajoutVehicule"));
-					request.setAttribute("listeVilles", facade.getNameVille());
-					request.setAttribute("listeVehicules", facade.getNameVehicule());
-					request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
+					this.ajouterVehicule(request,response);
 					break;
 				default:
 					this.goAccueil(request, response);
@@ -290,6 +299,47 @@ public class mainServlet extends HttpServlet {
 				}
 			}
 		}
+	}
+	
+	private void refuserReservation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int idReservation = Integer.parseInt(request.getParameter("idReservation"));
+		this.facade.refuserReservation(idReservation);
+		this.verifReservation(request, response);
+	}
+	
+	private void verifReservation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("idTrajet"));
+		request.setAttribute("idTrajet", id);
+		request.setAttribute("lesResAValide", this.facade.getResAValide(id));
+		request.setAttribute("lesResValide", this.facade.getResValide(id));
+		request.setAttribute("lesResRefuse", this.facade.getResRefuse(id));
+		request.getRequestDispatcher("WEB-INF/detailsTrajet.jsp").forward(request, response);
+	}
+	
+	private void confirmerReservation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int idReservation = Integer.parseInt(request.getParameter("idReservation"));
+		this.facade.confirmerReservation(idReservation);
+		this.verifReservation(request, response);
+	}
+	
+	private void annulerReservation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.facade.annulerReservation(Integer.parseInt(request.getParameter("idReservation")));
+		this.goCompte(request, response);
+	}
+	
+	private void supprimerTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.facade.supprimerTrajet(Integer.parseInt(request.getParameter("idTrajet")));
+		this.goCompte(request, response);
+	}
+	
+	private void ajouterVille(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.facade.ajoutVille(request.getParameter("ajoutVille"));
+		this.goAjoutBD(request, response);
+	}
+	
+	private void ajouterVehicule(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.facade.ajoutVehicule(request.getParameter("ajoutVehicule"));
+		this.goAjoutBD(request, response);
 	}
 
 	private void reserverTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -319,10 +369,10 @@ public class mainServlet extends HttpServlet {
 		request.setAttribute("villeDepartSelect", villeDep);
 		request.setAttribute("villeArriveeSelect", villeArr);
 		request.setAttribute("listeTrajets", facade.getTrajets(villeDep, villeArr));
-		request.setAttribute("listeVilles", facade.getNameVille());
 		request.setAttribute("listeVehicules", facade.getNameVehicule());
-		request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
+		this.goRecherche(request, response);
 	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
