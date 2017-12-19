@@ -13,10 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
-@Entity @SequenceGenerator(name = "port_gen", sequenceName = "port_gen",  initialValue = 1000)
+@Entity
 public class Trajet {
 	
-	@Id @GeneratedValue(strategy = GenerationType.AUTO, generator = "port_gen")
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idTrajet;
 	
 	@ManyToOne
