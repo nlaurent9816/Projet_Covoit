@@ -17,12 +17,13 @@
 	<c:forEach items="${lesResAValide}" var="r">
 	<div>
 	 Passager : ${r.passager.nom } ${r.passager.prenom } 
-	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}
+	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville} le ${r.leTrajet.dateDepart }
 	 Coût : ${r.etapeArrivee.tarif} €
 	 Mail : ${r.passager.mail }  Tel : ${r.passager.tel }
 	 Statut : ${r.statut}
 	<form id="confirmerReservation" method="post">
 		<button type="submit" name="todo" value="ConfirmerReservation">Confirmer la réservation</button>
+		<button type="submit" name="todo" value="RefuserReservation">Refuser la réservation</button>
 		<input type="hidden" name="idReservation" value="${ r.idReservation}"/>
 		<input type="hidden" name="idTrajet" value="${idTrajet}"/>
 		
@@ -36,7 +37,20 @@
 	<c:forEach items="${lesResValide}" var="r">
 	<div>
 	 Passager : ${r.passager.nom } ${r.passager.prenom } 
-	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}
+	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}  le ${r.leTrajet.dateDepart }
+	 Coût : ${r.etapeArrivee.tarif} €
+	 Mail : ${r.passager.mail }  Tel : ${r.passager.tel }
+	 Statut : ${r.statut}
+	 </div>
+	</c:forEach>
+</div>
+
+<div id="LesReservationsAnnulees" class="simpleForm">
+	<h1>Les Réservations annulées</h1>
+	<c:forEach items="${lesResRefuse}" var="r">
+	<div>
+	 Conducteur : ${r.passager.nom } ${r.passager.prenom } 
+	 De ${r.leTrajet.villeDepart.ville} à ${r.etapeArrivee.ville.ville}  le ${r.leTrajet.dateDepart }
 	 Coût : ${r.etapeArrivee.tarif} €
 	 Mail : ${r.passager.mail }  Tel : ${r.passager.tel }
 	 Statut : ${r.statut}
@@ -44,6 +58,7 @@
 	</c:forEach>
 </div>
 </div>
+
 
 
 <%@include file="footer.jsp" %>

@@ -15,6 +15,7 @@
 <form id="newTrajet" method="post" class="simpleForm">
 	<h1>Proposer un trajet</h1>
 	<c:if test="${failTrajet}"><p style="font-size: larger;color: red;">${reason}</p></c:if>
+	<c:if test="${successTrajet}"><p style="font-size: larger;color: red;">Votre trajet a été enregistré !</p></c:if>
 	<label>Votre véhicule : </label><input type ="text" name ="vehiculeDesc"/>
 	<label>Gabarit :</label><select name="vehiculeGabarit" size="1">
 	<c:forEach items="${listeVehicules}" var="v">
