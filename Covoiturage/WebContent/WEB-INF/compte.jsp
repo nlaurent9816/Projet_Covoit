@@ -17,9 +17,9 @@
 <div id="Mon Profil" class="simpleForm">
 	<h1>Mon Profil</h1>
 	<div>
-	${ infos.prenom} ${infos.nom }
-	sexe: ${infos.sexe }
-	mail : ${infos.mail }
+	${ infos.prenom} ${infos.nom } <br/>
+	genre : ${infos.sexe } <br/>
+	mail : ${infos.mail } <br/>
 	tel : ${infos.tel}
 	</div>
 
