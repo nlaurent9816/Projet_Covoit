@@ -43,8 +43,8 @@ public class mainServlet extends HttpServlet {
 			case "recherche":
 				this.goRecherche(request, response);
 				break;
-			case "ajout":
-				this.goAjoutBD(request, response);
+			case "gestion":
+				this.goGestionBD(request, response);
 				break;
 			case "ajoutTrajet":
 				//faire passer la liste des villes et des véhicules
@@ -77,10 +77,10 @@ public class mainServlet extends HttpServlet {
 			request.getRequestDispatcher("WEB-INF/recherche.jsp").forward(request, response);
 	    }
 	    
-	    private void goAjoutBD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    private void goGestionBD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    	request.setAttribute("listeVilles", facade.getNameVille());
 			request.setAttribute("listeVehicules", facade.getNameVehicule());
-			request.getRequestDispatcher("WEB-INF/ajoutBD.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/gestionBD.jsp").forward(request, response);
 	    }
 	    
 	    private void Deconnexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -334,13 +334,14 @@ public class mainServlet extends HttpServlet {
 	
 	private void ajouterVille(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.facade.ajoutVille(request.getParameter("ajoutVille"));
-		this.goAjoutBD(request, response);
+		this.goGestionBD(request, response);
 	}
 	
 	private void ajouterVehicule(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.facade.ajoutVehicule(request.getParameter("ajoutVehicule"));
-		this.goAjoutBD(request, response);
+		this.goGestionBD(request, response);
 	}
+	
 
 	private void reserverTrajet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int idTrajet = Integer.parseInt(request.getParameter("idTrajet"));

@@ -8,6 +8,6 @@
     <li><button type = "submit" name ="Nav" value="recherche">Trouver un trajet</button></li><!--toujours visible, mène vers page de recherche avancée  -->
     <c:if test = "${connecte eq 'true'}"><li><button type = "submit" name ="Nav" value="ajoutTrajet">Proposer un trajet</button></li></c:if>
     <c:if test = "${connecte eq 'true'}"><li><button type = "submit" name ="Nav" value="deconnexion">Se déconnecter</button></li></c:if>
-   	<c:if test = "${role eq 'admin' }"> <li><button type = "submit" name ="Nav" value="ajout">Ajouter ville/voiture</button></li></c:if><!--Visible pour l'administrateur seulement  -->
+   	<c:if test = "${role eq 'admin' }"> <li><button type = "submit" name ="Nav" value="gestion">Gestion base de données</button></li></c:if><!--Visible pour l'administrateur seulement  -->
   </ul>
 </form>

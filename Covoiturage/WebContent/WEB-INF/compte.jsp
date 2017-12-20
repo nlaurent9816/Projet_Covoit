@@ -40,7 +40,11 @@ les réservations (indiquer le nombre de réservations en attente + bouton perme
 	<c:forEach items="${listeTrajetConducteur}" var="t">
 	<div>
 	<span>Trajet du ${t.dateDepart } à ${t.heureDepart }.
-	Départ à ${t.villeDepart.ville}. Il reste ${t.nombrePlacesRestantes} places.</span>
+	Départ à ${t.villeDepart.ville} à destination de 
+	<c:forEach items="${t.lesEtapes}" var="e" varStatus="status">
+		<c:if test="${status.last}">${e.ville.ville}. </c:if>
+	</c:forEach> 
+	Il reste ${t.nombrePlacesRestantes} places.</span>
 		<form id="verificationReservation" method="post">
 			<button type="submit" name="todo" value="VerifReservation">Voir les réservations</button>
 			<button type="submit" name="todo" value="SupprimerTrajet">Supprimer le trajet</button>

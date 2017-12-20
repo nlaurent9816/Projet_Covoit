@@ -14,9 +14,9 @@
 <%@include file="header.jsp" %>
 <div style="background-color: #b3e6ff;padding: 1px;">
 <form id="ajoutVille" method="post" class="simpleForm">
-	<h1>Ajouter ville</h1>
+	<h1>Gestion ville</h1>
 	<label>Villes déjà présentes :</label><br>
-	<select name="villeDepart" size="5" style=" padding:2px; font-size: inherit; margin: 8px;">
+	<select name="ville" size="5" style=" padding:2px; font-size: inherit; margin: 8px;">
 		<c:forEach items="${listeVilles}" var="v">		
 			<option>${v}</option>
 		</c:forEach>
@@ -28,7 +28,7 @@
 </form>
 
 <form id="ajoutVehicule" method="post" class="simpleForm">
-	<h1>Ajouter véhicule</h1>
+	<h1>Gestion véhicule</h1>
 	<label>Véhicules déjà présents :</label><br>
 	<select name="vehicule" size="5" style=" padding:2px; font-size: inherit;margin: 8px;">
 		<c:forEach items="${listeVehicules}" var="v">		

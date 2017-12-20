@@ -42,6 +42,9 @@ public class Facade {
 		Query q = em.createQuery("SELECT t FROM Trajet t, InfoUtilisateur info, Login l WHERE l.login=:loginConducteur AND  l.infos=info AND t.conducteur=info");
 		q.setParameter("loginConducteur", loginConducteur);
 		List<Trajet> mesTrajets = (List<Trajet>) q.getResultList();
+		for (Trajet t : mesTrajets) {
+			t.getLesEtapes().size();//pour accéder aux informations des étapes 
+		}
 		return mesTrajets;
 	}
 	
@@ -428,4 +431,5 @@ public class Facade {
 		Vehicule monVehicule = new Vehicule(vehicule);
 		em.persist(monVehicule);
 	}
+	
 }
