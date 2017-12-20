@@ -106,6 +106,7 @@ public class mainServlet extends HttpServlet {
     private void registerUtilisateur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String password = (String) request.getParameter("mdp");
 		String password_verif = (String) request.getParameter("mdpbis");
+		
 		if (password.equals(password_verif)) {
 			String nom = (String) request.getParameter("nom");
 			String prenom = (String) request.getParameter("prenom");
@@ -113,8 +114,9 @@ public class mainServlet extends HttpServlet {
 			String tel = (String) request.getParameter("tel");
 			String email = (String) request.getParameter("email");
 			String login = (String) request.getParameter("login");
+			if(this.facade.LoginDisponible(login)) {
 				if(!nom.equals("") && !prenom.equals("") && sexe!=null && !tel.equals("") && !email.equals("") && !login.equals("")) {
-			
+					
 					try {
 						facade.enregistrerUtilisateur(nom, prenom, sexe, tel, email, login, password);
 					} catch (NoSuchAlgorithmException e) {
@@ -128,6 +130,13 @@ public class mainServlet extends HttpServlet {
 					request.setAttribute("reason", "Il manque des informations");
 					request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 				}
+			}
+			else {
+				request.setAttribute("failRegister", "true");
+				request.setAttribute("reason", "Login déjà utilisé");
+				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
+			}
+				
 		}
 		else {
 			request.setAttribute("failRegister", "true");

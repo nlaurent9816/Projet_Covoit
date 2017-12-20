@@ -342,6 +342,10 @@ public class Facade {
 		
 	}
 	
+	public boolean LoginDisponible(String login) {
+		return(em.find(Login.class, login)==null);
+	}
+	
 	/**
 	 * Donne la liste des villes stockées dans la BDD
 	 * @return
