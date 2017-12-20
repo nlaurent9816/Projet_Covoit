@@ -66,6 +66,7 @@ public class mainServlet extends HttpServlet {
 		}
 		
 	    private void goCompte(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	request.setAttribute("infos", facade.getInfosConducteur(currentLogin));
 	    	request.setAttribute("listeTrajetConducteur", facade.getTrajetConducteur(currentLogin));
 			request.setAttribute("listeReservations", facade.getReservations(currentLogin));
 			request.getRequestDispatcher("WEB-INF/compte.jsp").forward(request, response);
@@ -160,16 +161,15 @@ public class mainServlet extends HttpServlet {
 		String date_trajet = (String) request.getParameter("dateTrajet");
 		String heure_trajet = (String) request.getParameter("heureTrajet");
 		String minute_trajet=(String) request.getParameter("minuteTrajet");
-		heure_trajet=heure_trajet+" h "+minute_trajet;
 		String ville_depart = (String) request.getParameter("villeDepart");
 		String ville_arrivee = (String) request.getParameter("villeArrivee");
 		String tarif_trajet = (String) request.getParameter("tarifTrajet");
 		String[] etapes_trajet = (String[]) request.getParameterValues("etapeTrajet");
 		String[] tarifs_etapes = (String[]) request.getParameterValues("tarifEtape");
 		String place_trajet = (String) request.getParameter("placeTrajet");
-		
-		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals(""))) 
+		if(!(this.currentLogin.equals("")) && !(vehicule_desc.equals("")) && !(vehicule_gabarit.equals("")) && !(date_trajet.equals("")) && !(heure_trajet.equals("")) && !(heure_trajet.equals("")) && !(ville_depart.equals("")) && !(ville_arrivee.equals("")) && !(tarif_trajet.equals("")) && !(place_trajet.equals(""))) 
 		{
+				heure_trajet=heure_trajet+" h "+minute_trajet;
 				this.facade.enregistrerTrajet(this.currentLogin, vehicule_desc, vehicule_gabarit, date_trajet, heure_trajet, ville_depart, ville_arrivee, tarif_trajet, etapes_trajet, tarifs_etapes, place_trajet);	
 				request.setAttribute("successTrajet", "true");
 				this.goAjoutTrajet(request, response);

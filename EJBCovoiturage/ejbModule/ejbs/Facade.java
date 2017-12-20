@@ -346,6 +346,13 @@ public class Facade {
 		return(em.find(Login.class, login)==null);
 	}
 	
+	public InfoUtilisateur getInfosConducteur(String currentLogin) {
+		Query q = em.createQuery("Select info FROM InfoUtilisateur info, Login l WHERE l.infos=info AND l.login= :currentLogin ");
+		q.setParameter("currentLogin", currentLogin);
+		InfoUtilisateur info = (InfoUtilisateur) q.getSingleResult();
+		return info;
+	}
+	
 	/**
 	 * Donne la liste des villes stockées dans la BDD
 	 * @return

@@ -54,7 +54,7 @@
 	     		<ul>
 					<c:forEach items="${t.lesEtapes}" var="etape" varStatus="loop">
 							<li> ${etape.ville.ville} pour ${etape.tarif} €
-							<c:if test = "${connecte == 'true'}"><input type="radio" name="arrivee" value="${etape.id}"/></c:if>
+							<c:if test = "${(connecte == 'true') and (t.nombrePlacesRestantes ne 0) }"><input type="radio" name="arrivee" value="${etape.id}"/></c:if>
 							</li>
 					</c:forEach>
 				</ul>
@@ -63,9 +63,9 @@
 				Il reste ${t.nombrePlacesRestantes } places</span><br>
 				
 				
-				<c:if test = "${connecte == 'true'}">
-					
+				<c:if test = "${(connecte == 'true') and (t.nombrePlacesRestantes ne 0) }">
 					<label>Nombre de places à réserver : </label> 
+					
 					<select name="nbPlaces" size="1" style=" padding:5px; font-size: inherit;">
 						<c:forEach var="nb" begin="1" end="${ t.nombrePlacesRestantes}">
 							<option>${nb}</option>

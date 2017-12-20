@@ -14,6 +14,16 @@
 
 <%@include file="header.jsp" %>
 <div style="background-color: #b3e6ff;padding: 1px;">
+<div id="Mon Profil" class="simpleForm">
+	<h1>Mon Profil</h1>
+	<div>
+	${ infos.prenom} ${infos.nom }
+	sexe: ${infos.sexe }
+	mail : ${infos.mail }
+	tel : {infos.tel}
+	</div>
+
+</div>
 <div id="MesReservations" class="simpleForm">
 	<h1>Mes Réservations</h1>
 	<c:forEach items="${listeReservations}" var="r">
