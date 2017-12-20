@@ -20,7 +20,7 @@
 	${ infos.prenom} ${infos.nom }
 	sexe: ${infos.sexe }
 	mail : ${infos.mail }
-	tel : {infos.tel}
+	tel : ${infos.tel}
 	</div>
 
 </div>
